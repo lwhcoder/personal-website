@@ -1,0 +1,74 @@
+---
+title: "React Best Practices for 2025"
+slug: "react-best-practices"
+date: "2024-12-15"
+description: "Essential patterns and practices every React developer should know in 2025."
+tags: ["react", "javascript", "best-practices"]
+coverImageSrc: "https://placehold.co/1280x720.png"
+---
+
+# React Best Practices for 2025
+
+React continues to evolve, and with it, the best practices for building robust applications. Here are the essential patterns every React developer should know.
+
+## 1. Component Composition
+
+Always favor composition over inheritance. Use children props and render props to create flexible, reusable components.
+
+<AdvancedCode
+  type="code"
+  language="tsx"
+  code={`// Good: Composition
+function Card({ children }) {
+  return (
+    <div className="card">
+      {children}
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <Card>
+      <h2>Title</h2>
+      <p>Content goes here</p>
+    </Card>
+  )
+}`}
+/>
+
+## 2. Custom Hooks
+
+Extract logic into custom hooks for better reusability and testing.
+
+<AdvancedCode
+  type="code"
+  language="tsx"
+  code={`function useLocalStorage(key, initialValue) {
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key)
+      return item ? JSON.parse(item) : initialValue
+    } catch (error) {
+      return initialValue
+    }
+  })
+
+  const setValue = (value) => {
+    try {
+      setStoredValue(value)
+      window.localStorage.setItem(key, JSON.stringify(value))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  return [storedValue, setValue]
+}`}
+/>
+
+## 3. Error Boundaries
+
+Always implement error boundaries to gracefully handle errors in your component tree.
+
+Remember: Keep components small, use TypeScript, and test your components thoroughly!

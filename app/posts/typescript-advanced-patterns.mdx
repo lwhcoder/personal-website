@@ -1,0 +1,68 @@
+---
+title: "TypeScript Advanced Patterns"
+slug: "typescript-advanced-patterns"
+date: "2024-12-05"
+description: "Explore advanced TypeScript patterns that will make your code more type-safe and maintainable."
+tags: ["typescript", "patterns", "web-dev"]
+coverImageSrc: "https://placehold.co/1280x720.png"
+---
+
+# TypeScript Advanced Patterns
+
+TypeScript offers powerful features that go beyond basic type annotations. Let's explore some advanced patterns.
+
+## Conditional Types
+
+Use conditional types to create flexible type definitions.
+
+<AdvancedCode
+  type="code"
+  language="typescript"
+  code={`type IsString<T> = T extends string ? true : false
+
+type Test1 = IsString<string>    // true
+type Test2 = IsString<number>    // false
+
+// More practical example
+type ApiResponse<T> = T extends string 
+  ? { message: T } 
+  : { data: T }`}
+/>
+
+## Mapped Types
+
+Transform existing types into new ones.
+
+<AdvancedCode
+  type="code"
+  language="typescript"
+  code={`type User = {
+  id: number
+  name: string
+  email: string
+}
+
+// Make all properties optional
+type PartialUser = Partial<User>
+
+// Make all properties readonly
+type ReadonlyUser = Readonly<User>
+
+// Pick specific properties
+type UserInfo = Pick<User, 'name' | 'email'>`}
+/>
+
+## Template Literal Types
+
+Create dynamic string types.
+
+<AdvancedCode
+  type="code"
+  language="typescript"
+  code={`type Color = 'red' | 'blue' | 'green'
+type Size = 'small' | 'medium' | 'large'
+
+type ClassName = \`\${Color}-\${Size}\` // 'red-small' | 'red-medium' | ...`}
+/>
+
+These patterns help create more robust and maintainable TypeScript applications!

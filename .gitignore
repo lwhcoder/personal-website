@@ -1,0 +1,8 @@
+.DS_Store
+/node_modules/
+.env
+.env*
+MAILGUN_SETUP.md
+# React Router
+/.react-router/
+/build/
