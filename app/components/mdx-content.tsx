@@ -8,30 +8,30 @@ import { AdvancedCode } from './advanced-code'
 const components = {
   AdvancedCode,
   h1: (props: any) => (
-    <h1 className="text-4xl font-bold mt-6 mb-4" {...props} />
+    <h1 className="text-4xl font-bold mt-6 mb-4 text-foreground" {...props} />
   ),
   h2: (props: any) => (
-    <h2 className="text-3xl font-semibold mt-6 mb-4" {...props} />
+    <h2 className="text-3xl font-semibold mt-6 mb-4 text-foreground" {...props} />
   ),
   h3: (props: any) => (
-    <h3 className="text-2xl font-semibold mt-5 mb-3" {...props} />
+    <h3 className="text-2xl font-semibold mt-5 mb-3 text-foreground" {...props} />
   ),
   h4: (props: any) => (
-    <h4 className="text-xl font-semibold mt-4 mb-2" {...props} />
+    <h4 className="text-xl font-semibold mt-4 mb-2 text-foreground" {...props} />
   ),
   h5: (props: any) => (
-    <h5 className="text-lg font-medium mt-3 mb-2" {...props} />
+    <h5 className="text-lg font-medium mt-3 mb-2 text-foreground" {...props} />
   ),
   h6: (props: any) => (
-    <h6 className="text-base font-medium mt-2 mb-2" {...props} />
+    <h6 className="text-base font-medium mt-2 mb-2 text-foreground" {...props} />
   ),
   p: (props: any) => (
-    <p className="my-4 leading-relaxed text-base" {...props} />
+    <p className="my-4 leading-relaxed text-base text-foreground" {...props} />
   ),
 
   a: (props: any) => (
     <a
-      className="text-foreground hover:text-muted-foreground hover:underline font-medium"
+      className="text-primary hover:text-primary/80 hover:underline font-medium"
       target="_blank"
       rel="noopener noreferrer"
       {...props}
@@ -41,12 +41,12 @@ const components = {
     return <br {...props} />
   },
   ul: (props: any) => (
-    <ul className="list-disc list-inside my-4 ml-6" {...props} />
+    <ul className="list-disc list-inside my-4 ml-6 text-foreground" {...props} />
   ),
   ol: (props: any) => (
-    <ol className="list-decimal list-inside my-4 ml-6" {...props} />
+    <ol className="list-decimal list-inside my-4 ml-6 text-foreground" {...props} />
   ),
-  li: (props: any) => <li className="mb-1" {...props} />,
+  li: (props: any) => <li className="mb-1 text-foreground" {...props} />,
 
   blockquote: (props: any) => (
     <blockquote
@@ -65,8 +65,8 @@ const components = {
 
     if (language) {
       return (
-        <pre className="my-6 rounded-md overflow-x-auto text-sm bg-zinc-950 p-4 shadow-sm">
-          <code className={`language-${language}`} {...props}>
+        <pre className="my-6 rounded-md overflow-x-auto text-sm bg-muted border p-4 shadow-sm">
+          <code className={`language-${language} text-foreground`} {...props}>
             {children}
           </code>
         </pre>
@@ -98,7 +98,7 @@ const components = {
   th: (props: any) => (
     <th className="p-2 font-semibold text-foreground" {...props} />
   ),
-  td: (props: any) => <td className="p-2 text-muted-foreground" {...props} />,
+  td: (props: any) => <td className="p-2 text-foreground" {...props} />,
 
   hr: (props: any) => <hr className="my-8 border-muted" {...props} />,
 
@@ -162,7 +162,7 @@ export function MDXContent({ source }: MDXContentProps) {
   }
 
   return (
-    <div className="prose prose-gray dark:prose-invert max-w-none">
+    <div className="prose prose-gray dark:prose-invert max-w-none text-foreground">
       <Content />
     </div>
   )

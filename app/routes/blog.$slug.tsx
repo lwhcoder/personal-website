@@ -6,6 +6,7 @@ import { Calendar, Clock, ArrowLeft, Share2, Twitter, Linkedin } from "lucide-re
 import { MDXContent } from "~/components/mdx-content"
 import { PageTransition, ScrollReveal } from "~/components/page-transitions"
 import { BlogPostSkeleton } from "~/components/loading"
+import { GiscusComments } from "~/components/giscus-comments"
 import { useNavigation } from "react-router"
 import { promises as fs } from 'fs'
 import { join } from 'path'
@@ -58,7 +59,7 @@ export default function BlogPost({ loaderData }: { loaderData: any }) {
     <PageTransition>
       <div className="min-h-screen">
         {/* Header */}
-        <section className="py-12 px-4 sm:px-6 lg:px-8 border-b">
+        <section className="py-12 px-4 sm:px-6 lg:px-8 border-b text-xl">
           <div className="max-w-4xl mx-auto">
             <ScrollReveal>
               <Button variant="ghost" asChild className="mb-8 transition-all duration-200 hover:translate-x-1">
@@ -117,12 +118,7 @@ export default function BlogPost({ loaderData }: { loaderData: any }) {
                   ))}
                 </div>
               </ScrollReveal>
-            </div>
-          </div>
-        </section>
-
-        {/* Cover Image */}
-        {frontMatter.coverImageSrc && (
+                      {frontMatter.coverImageSrc && (
           <ScrollReveal>
             <section className="px-4 sm:px-6 lg:px-8 py-8">
               <div className="max-w-5xl mx-auto">
@@ -138,80 +134,41 @@ export default function BlogPost({ loaderData }: { loaderData: any }) {
             </section>
           </ScrollReveal>
         )}
+            </div>
+          </div>
+        </section>
+
+        {/* Cover Image */}
+
 
         {/* Content */}
         <section className="py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
-            <div className="grid lg:grid-cols-4 gap-12">
               {/* Main Content */}
               <ScrollReveal className="lg:col-span-3">
                 <article className="prose prose-lg max-w-none">
                   <MDXContent source={content} />
                 </article>
               </ScrollReveal>
-
-              {/* Sidebar */}
-              <aside className="lg:col-span-1">
-                <div className="sticky top-8 space-y-8">
-                  {/* Share */}
-                  <ScrollReveal delay={500}>
-                    <Card className="transition-all duration-300 hover:shadow-lg">
-                      <CardContent className="p-6">
-                        <h3 className="font-semibold mb-4 flex items-center gap-2">
-                          <Share2 className="w-4 h-4" />
-                          Share this article
-                        </h3>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="outline" asChild className="transition-all duration-200 hover:scale-105">
-                            <a 
-                              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(frontMatter.title)}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <Twitter className="w-4 h-4" />
-                            </a>
-                          </Button>
-                          <Button size="sm" variant="outline" asChild className="transition-all duration-200 hover:scale-105">
-                            <a 
-                              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <Linkedin className="w-4 h-4" />
-                            </a>
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </ScrollReveal>
-
-                  {/* Author */}
-                  <ScrollReveal delay={600}>
-                    <Card className="transition-all duration-300 hover:shadow-lg">
-                      <CardContent className="p-6">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center transition-colors duration-200">
-                            <span className="text-lg font-bold">LW</span>
-                          </div>
-                          <div>
-                            <h3 className="font-semibold">lwh</h3>
-                            <p className="text-sm">Full-Stack Developer</p>
-                          </div>
-                        </div>
-                        <p className="text-sm mb-4">
-                          Passionate about creating modern web experiences and sharing knowledge with the developer community.
-                        </p>
-                        <Button size="sm" variant="outline" className="w-full transition-all duration-200 hover:scale-105" asChild>
-                          <a href="/about">Learn More</a>
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </ScrollReveal>
-                </div>
-              </aside>
-            </div>
           </div>
         </section>
+
+        <Separator />
+
+        {/* Comments Section */}
+        <ScrollReveal>
+          <section className="py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto">
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold tracking-tight mb-2">Comments</h2>
+                <p className="text-muted-foreground">
+                  Join the discussion! Comments are powered by GitHub Discussions.
+                </p>
+              </div>
+              <GiscusComments />
+            </div>
+          </section>
+        </ScrollReveal>
 
         <Separator />
 

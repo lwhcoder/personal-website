@@ -190,74 +190,75 @@ export default function Blog() {
               </p>
             </ScrollReveal>
             
-            <StaggeredList staggerDelay={150} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <StaggeredList staggerDelay={150} className="space-y-8 px-4 sm:px-6 lg:px-8">
               {filteredPosts.map((post: BlogPost) => (
-                <Card key={post.slug} className="overflow-hidden p-4 group hover:shadow-lg transition-all duration-300 rounded-none hover:-translate-y-1">
-                  <div className="aspect-video overflow-hidden">
-                    <img 
-                      src={post.coverImageSrc || 'https://placehold.co/1280x720.png'}
-                      alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
+                <article key={post.slug} className="group py-8 border-b border-border/40 last:border-b-0 text-xl">
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="md:w-1/3 aspect-video overflow-hidden flex-shrink-0">
+                      <img 
+                        src={post.coverImageSrc || 'https://placehold.co/1280x720.png'}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    </div>
+                    
+                    <div className="md:w-2/3 space-y-4">
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          {new Date(post.date).toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric',
+                            year: 'numeric'
+                          })}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {post.readTime}
+                        </div>
+                      </div>
+                      
+                      <h3 className="text-xl sm:text-2xl font-bold group-hover:text-foreground transition-colors">
+                        {post.title}
+                      </h3>
+                      
+                      <p className="text-muted-foreground leading-relaxed">
+                        {post.description}
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-2">
+                        {post.tags.slice(0, 3).map((tag: string) => (
+                          <Badge 
+                            key={tag} 
+                            variant="secondary" 
+                            className="text-xs cursor-pointer hover:bg-muted-foreground/20 transition-colors duration-200"
+                            onClick={() => handleTagClick(tag)}
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                        {post.tags.length > 3 && (
+                          <Badge variant="secondary" className="text-xs">
+                            +{post.tags.length - 3}
+                          </Badge>
+                        )}
+                      </div>
+                      
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="p-0 h-auto font-medium text-foreground group/button" 
+                        asChild
+                      >
+                        <a href={`/blog/${post.slug}`} className="flex items-center gap-1">
+                          Read more
+                          <ArrowRight className="w-3 h-3 transition-transform duration-200 group-hover/button:translate-x-1" />
+                        </a>
+                      </Button>
+                    </div>
                   </div>
-                  
-                  <CardHeader>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        {new Date(post.date).toLocaleDateString('en-US', { 
-                          month: 'short', 
-                          day: 'numeric',
-                          year: 'numeric'
-                        })}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        {post.readTime}
-                      </div>
-                    </div>
-                    <CardTitle className="text-xl group-hover:text-foreground transition-colors">
-                      {post.title}
-                    </CardTitle>
-                  </CardHeader>
-                  
-                  <CardContent className="space-y-4">
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      {post.description}
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-2">
-                      {post.tags.slice(0, 2).map((tag: string) => (
-                        <Badge 
-                          key={tag} 
-                          variant="secondary" 
-                          className="text-xs cursor-pointer hover:bg-muted-foreground/20 transition-colors duration-200"
-                          onClick={() => handleTagClick(tag)}
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                      {post.tags.length > 2 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{post.tags.length - 2}
-                        </Badge>
-                      )}
-                    </div>
-                    
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="p-0 h-auto font-medium text-foreground group/button" 
-                      asChild
-                    >
-                      <a href={`/blog/${post.slug}`} className="flex items-center gap-1">
-                        Read more
-                        <ArrowRight className="w-3 h-3 transition-transform duration-200 group-hover/button:translate-x-1" />
-                      </a>
-                    </Button>
-                  </CardContent>
-                </Card>
+                </article>
               ))}
             </StaggeredList>
           </div>

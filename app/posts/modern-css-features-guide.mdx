@@ -1,0 +1,498 @@
+---
+title: "Modern CSS Features: Grid, Flexbox, and Beyond"
+slug: "modern-css-features-guide"
+date: "2025-09-20"
+description: "Master modern CSS features including CSS Grid, Flexbox, Container Queries, CSS Variables, and other cutting-edge layout and styling techniques."
+tags: ["css", "grid", "flexbox", "modern-css", "web-design", "responsive"]
+coverImageSrc: "https://placehold.co/1280x720.png"
+---
+
+# Modern CSS Features: Grid, Flexbox, and Beyond
+
+CSS has evolved tremendously in recent years. Let's explore the modern features that make web styling more powerful and intuitive than ever.
+
+## CSS Grid: Two-Dimensional Layouts
+
+CSS Grid excels at creating complex, two-dimensional layouts:
+
+<AdvancedCode
+  type="code"
+  language="css"
+  code={`.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: 
+    "header header header"
+    "sidebar main aside"
+    "footer footer footer";
+  gap: 1rem;
+  min-height: 100vh;
+}
+
+.header { 
+  grid-area: header; 
+  background: #333;
+  color: white;
+  padding: 1rem;
+}
+
+.sidebar { 
+  grid-area: sidebar;
+  background: #f0f0f0;
+  padding: 1rem;
+}
+
+.main { 
+  grid-area: main;
+  padding: 1rem;
+}
+
+.aside { 
+  grid-area: aside;
+  background: #e0e0e0;
+  padding: 1rem;
+}
+
+.footer { 
+  grid-area: footer;
+  background: #333;
+  color: white;
+  padding: 1rem;
+}`}
+/>
+
+### Advanced Grid Techniques
+
+<AdvancedCode
+  type="code"
+  language="css"
+  code={`/* Responsive Grid with Auto-Fit */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+}
+
+/* Grid with Spanning Items */
+.magazine-layout {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 200px;
+  gap: 1rem;
+}
+
+.featured-article {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.small-article {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+/* Grid with Line Names */
+.complex-layout {
+  display: grid;
+  grid-template-columns: [main-start] 1fr [content-start] 3fr [content-end] 1fr [main-end];
+  grid-template-rows: [header-start] auto [header-end main-start] 1fr [main-end footer-start] auto [footer-end];
+}
+
+.content {
+  grid-column: content-start / content-end;
+  grid-row: main-start / main-end;
+}`}
+/>
+
+## Flexbox: One-Dimensional Layouts
+
+Flexbox is perfect for one-dimensional layouts and component alignment:
+
+<AdvancedCode
+  type="code"
+  language="css"
+  code={`/* Basic Flexbox Container */
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Navigation Bar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #333;
+  color: white;
+}
+
+.nav-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+/* Card Component */
+.card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 300px;
+}
+
+.card-image {
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1rem;
+}
+
+.card-title {
+  margin: 0 0 0.5rem 0;
+}
+
+.card-description {
+  flex: 1;
+  margin: 0 0 1rem 0;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}`}
+/>
+
+## CSS Custom Properties (Variables)
+
+CSS Variables provide dynamic styling capabilities:
+
+<AdvancedCode
+  type="code"
+  language="css"
+  code={`:root {
+  /* Colors */
+  --primary-color: #3b82f6;
+  --secondary-color: #64748b;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Typography */
+  --font-family-sans: 'Inter', sans-serif;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+}
+
+/* Using variables */
+.button {
+  background: var(--primary-color);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  background: color-mix(in srgb, var(--primary-color) 85%, black);
+}
+
+/* Dark mode with CSS variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #60a5fa;
+    --background-color: #1f2937;
+    --text-color: #f9fafb;
+  }
+}`}
+/>
+
+## Container Queries
+
+Container Queries allow responsive design based on container size:
+
+<AdvancedCode
+  type="code"
+  language="css"
+  code={`/* Container Query Setup */
+.card-container {
+  container-type: inline-size;
+  container-name: card;
+}
+
+.card {
+  padding: 1rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+/* Container Query Rules */
+@container card (min-width: 300px) {
+  .card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .card-image {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+  }
+  
+  .card-content {
+    flex: 1;
+  }
+}
+
+@container card (min-width: 500px) {
+  .card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .card-image {
+    width: 200px;
+    height: 200px;
+    align-self: center;
+  }
+}`}
+/>
+
+## Modern CSS Functions
+
+### clamp(), min(), max()
+
+<AdvancedCode
+  type="code"
+  language="css"
+  code={`/* Responsive typography */
+h1 {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+}
+
+/* Responsive spacing */
+.container {
+  padding: clamp(1rem, 5vw, 3rem);
+  max-width: min(90vw, 1200px);
+  margin: 0 auto;
+}
+
+/* Flexible grid columns */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+}`}
+/>
+
+### Color Functions
+
+<AdvancedCode
+  type="code"
+  language="css"
+  code={`/* Color mixing */
+.button {
+  background: color-mix(in srgb, blue 75%, red);
+}
+
+.button:hover {
+  background: color-mix(in srgb, var(--primary-color) 85%, black);
+}
+
+/* Relative color syntax */
+.accent {
+  color: oklch(from var(--primary-color) l c h);
+  background: oklch(from var(--primary-color) calc(l + 0.3) c h);
+}`}
+/>
+
+## CSS Logical Properties
+
+Write CSS that works with different writing modes:
+
+<AdvancedCode
+  type="code"
+  language="css"
+  code={`/* Instead of margin-left and margin-right */
+.element {
+  margin-inline-start: 1rem;
+  margin-inline-end: 2rem;
+  
+  /* Instead of margin-top and margin-bottom */
+  margin-block-start: 0.5rem;
+  margin-block-end: 1rem;
+  
+  /* Shorthand versions */
+  margin-inline: 1rem 2rem;
+  margin-block: 0.5rem 1rem;
+  
+  /* Border logical properties */
+  border-inline-start: 2px solid blue;
+  border-block-end: 1px solid gray;
+  
+  /* Text alignment */
+  text-align: start; /* instead of left */
+}`}
+/>
+
+## Subgrid
+
+Create nested grids that align with parent grid:
+
+<AdvancedCode
+  type="code"
+  language="css"
+  code={`.parent-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.nested-container {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: subgrid;
+  gap: inherit;
+}
+
+.nested-item {
+  /* These will align with the parent grid columns */
+  background: #f0f0f0;
+  padding: 1rem;
+}`}
+/>
+
+## CSS Cascade Layers
+
+Control specificity with cascade layers:
+
+<AdvancedCode
+  type="code"
+  language="css"
+  code={`/* Define layer order */
+@layer reset, base, components, utilities;
+
+/* Reset layer */
+@layer reset {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
+
+/* Base layer */
+@layer base {
+  body {
+    font-family: system-ui, sans-serif;
+    line-height: 1.6;
+  }
+}
+
+/* Components layer */
+@layer components {
+  .button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+}
+
+/* Utilities layer */
+@layer utilities {
+  .text-center { text-align: center; }
+  .hidden { display: none; }
+}`}
+/>
+
+## Practical Example: Modern Card Component
+
+<AdvancedCode
+  type="code"
+  language="css"
+  code={`.card {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid color-mix(in srgb, var(--primary-color) 20%, transparent);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+  transform: translateY(-2px);
+}
+
+@container (min-width: 400px) {
+  .card {
+    flex-direction: row;
+  }
+  
+  .card-image {
+    width: 150px;
+    flex-shrink: 0;
+  }
+}
+
+.card-content {
+  padding: clamp(1rem, 3vw, 1.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.card-title {
+  font-size: clamp(var(--font-size-lg), 3vw, var(--font-size-xl));
+  font-weight: 600;
+  color: var(--text-color);
+  margin-block-end: var(--spacing-xs);
+}`}
+/>
+
+These modern CSS features provide incredible flexibility and power for creating responsive, maintainable, and beautiful web interfaces. Start incorporating them into your projects to write more efficient and future-proof CSS!

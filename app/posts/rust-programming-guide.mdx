@@ -1,0 +1,292 @@
+---
+title: "Getting Started with Rust Programming"
+slug: "rust-programming-guide"
+date: "2025-09-20"
+description: "Learn Rust fundamentals including ownership, memory safety, and practical examples for systems programming."
+tags: ["rust", "systems-programming", "memory-safety", "performance"]
+coverImageSrc: "https://placehold.co/1280x720.png"
+---
+
+# Getting Started with Rust Programming
+
+Rust is a systems programming language that focuses on safety, speed, and concurrency. Let's explore what makes Rust special and how to get started.
+
+## Why Rust?
+
+Rust offers:
+- **Memory Safety**: No null pointer dereferences, buffer overflows, or memory leaks
+- **Performance**: Zero-cost abstractions and minimal runtime
+- **Concurrency**: Safe parallelism without data races
+- **Cross-platform**: Runs on many architectures and platforms
+
+## Basic Syntax
+
+Let's start with a simple Rust program:
+
+<AdvancedCode
+  type="code"
+  language="rust"
+  code={`fn main() {
+    println!("Hello, Rust!");
+    
+    // Variables are immutable by default
+    let name = "World";
+    let mut counter = 0; // mut makes it mutable
+    
+    // Type inference works great
+    let numbers = vec![1, 2, 3, 4, 5];
+    
+    // Pattern matching with match
+    match counter {
+        0 => println!("Starting!"),
+        1..=10 => println!("Low count"),
+        _ => println!("High count"),
+    }
+}`}
+/>
+
+## Ownership System
+
+Rust's ownership system is its most unique feature:
+
+<AdvancedCode
+  type="code"
+  language="rust"
+  code={`fn main() {
+    // Ownership transfer (move)
+    let s1 = String::from("hello");
+    let s2 = s1; // s1 is no longer valid
+    
+    // This would cause a compile error:
+    // println!("{}", s1);
+    
+    // Borrowing with references
+    let s3 = String::from("world");
+    let len = calculate_length(&s3); // Borrow, don't move
+    println!("Length of '{}' is {}", s3, len); // s3 still valid
+    
+    // Mutable references
+    let mut s4 = String::from("hello");
+    change(&mut s4);
+    println!("{}", s4); // "hello, world"
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+} // s goes out of scope but doesn't drop the data
+
+fn change(s: &mut String) {
+    s.push_str(", world");
+}`}
+/>
+
+## Structs and Enums
+
+Define custom data types:
+
+<AdvancedCode
+  type="code"
+  language="rust"
+  code={`// Struct definition
+#[derive(Debug)]
+struct User {
+    username: String,
+    email: String,
+    active: bool,
+    sign_in_count: u64,
+}
+
+// Enum with associated data
+#[derive(Debug)]
+enum IpAddr {
+    V4(u8, u8, u8, u8),
+    V6(String),
+}
+
+// Implementation block
+impl User {
+    // Associated function (like static method)
+    fn new(username: String, email: String) -> User {
+        User {
+            username,
+            email,
+            active: true,
+            sign_in_count: 1,
+        }
+    }
+    
+    // Method
+    fn deactivate(&mut self) {
+        self.active = false;
+    }
+}
+
+fn main() {
+    let mut user1 = User::new(
+        String::from("alice"),
+        String::from("alice@example.com"),
+    );
+    
+    user1.deactivate();
+    println!("{:#?}", user1);
+    
+    let ip1 = IpAddr::V4(127, 0, 0, 1);
+    let ip2 = IpAddr::V6(String::from("::1"));
+}`}
+/>
+
+## Error Handling
+
+Rust uses `Result` and `Option` types for error handling:
+
+<AdvancedCode
+  type="code"
+  language="rust"
+  code={`use std::fs::File;
+use std::io::{self, Read};
+
+// Function that can fail
+fn read_file(filename: &str) -> Result<String, io::Error> {
+    let mut file = File::open(filename)?; // ? operator propagates errors
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    Ok(contents)
+}
+
+fn main() {
+    // Handle the Result
+    match read_file("example.txt") {
+        Ok(contents) => println!("File contents: {}", contents),
+        Err(error) => println!("Error reading file: {}", error),
+    }
+    
+    // Using unwrap_or_else for default values
+    let contents = read_file("example.txt")
+        .unwrap_or_else(|_| String::from("Default content"));
+    
+    // Option type example
+    let maybe_number: Option<i32> = Some(42);
+    match maybe_number {
+        Some(n) => println!("Got a number: {}", n),
+        None => println!("No number found"),
+    }
+}`}
+/>
+
+## Collections and Iterators
+
+Work with collections efficiently:
+
+<AdvancedCode
+  type="code"
+  language="rust"
+  code={`fn main() {
+    // Vector
+    let mut vec = Vec::new();
+    vec.push(1);
+    vec.push(2);
+    vec.push(3);
+    
+    // Or use the vec! macro
+    let vec2 = vec![1, 2, 3, 4, 5];
+    
+    // Functional programming with iterators
+    let doubled: Vec<i32> = vec2
+        .iter()
+        .map(|x| x * 2)
+        .collect();
+    
+    let sum: i32 = vec2
+        .iter()
+        .filter(|&x| *x > 2)
+        .sum();
+    
+    println!("Doubled: {:?}", doubled);
+    println!("Sum of numbers > 2: {}", sum);
+    
+    // HashMap
+    use std::collections::HashMap;
+    let mut scores = HashMap::new();
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+    
+    // Access values
+    let team_name = String::from("Blue");
+    let score = scores.get(&team_name).unwrap_or(&0);
+    println!("Score: {}", score);
+}`}
+/>
+
+## Concurrency
+
+Safe concurrent programming with Rust:
+
+<AdvancedCode
+  type="code"
+  language="rust"
+  code={`use std::thread;
+use std::sync::mpsc;
+use std::time::Duration;
+
+fn main() {
+    // Spawn threads
+    let handle = thread::spawn(|| {
+        for i in 1..10 {
+            println!("Thread: {}", i);
+            thread::sleep(Duration::from_millis(1));
+        }
+    });
+    
+    for i in 1..5 {
+        println!("Main: {}", i);
+        thread::sleep(Duration::from_millis(1));
+    }
+    
+    handle.join().unwrap();
+    
+    // Message passing with channels
+    let (tx, rx) = mpsc::channel();
+    
+    thread::spawn(move || {
+        let vals = vec![
+            String::from("hi"),
+            String::from("from"),
+            String::from("the"),
+            String::from("thread"),
+        ];
+        
+        for val in vals {
+            tx.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+    
+    for received in rx {
+        println!("Got: {}", received);
+    }
+}`}
+/>
+
+## Getting Started
+
+<AdvancedCode
+  type="command"
+  commands={[
+    { label: 'Install Rust', code: 'curl --proto \'=https\' --tlsv1.2 -sSf https://sh.rustup.rs | sh' },
+    { label: 'Create project', code: 'cargo new my_project' },
+    { label: 'Build project', code: 'cargo build' },
+    { label: 'Run project', code: 'cargo run' },
+    { label: 'Run tests', code: 'cargo test' }
+  ]}
+/>
+
+## Key Concepts Summary
+
+1. **Ownership**: Each value has a single owner
+2. **Borrowing**: References that don't take ownership
+3. **Lifetimes**: Ensure references are valid
+4. **Pattern Matching**: Powerful control flow with `match`
+5. **Error Handling**: `Result` and `Option` types
+6. **Traits**: Shared behavior (like interfaces)
+
+Rust's learning curve is steep, but the compiler is your friend - it catches bugs at compile time that would be runtime errors in other languages. Start small, read the compiler messages, and embrace the borrow checker!

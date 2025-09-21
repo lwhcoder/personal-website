@@ -1,0 +1,360 @@
+---
+title: "GraphQL vs REST: Choosing the Right API Architecture"
+slug: "graphql-vs-rest-comparison"
+date: "2025-09-20"
+description: "A comprehensive comparison of GraphQL and REST APIs, covering pros, cons, use cases, and practical implementation examples."
+tags: ["graphql", "rest", "api", "architecture", "comparison"]
+coverImageSrc: "https://placehold.co/1280x720.png"
+---
+
+# GraphQL vs REST: Choosing the Right API Architecture
+
+Choosing between GraphQL and REST is one of the most important architectural decisions for modern APIs. Let's explore both approaches in detail.
+
+## What is REST?
+
+REST (Representational State Transfer) is an architectural style that uses standard HTTP methods and status codes:
+
+<AdvancedCode
+  type="code"
+  language="javascript"
+  code={`// REST API Example with Express.js
+const express = require('express');
+const app = express();
+
+// Get all users
+app.get('/api/users', async (req, res) => {
+  const users = await User.findAll();
+  res.json(users);
+});
+
+// Get specific user
+app.get('/api/users/:id', async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  res.json(user);
+});
+
+// Create new user
+app.post('/api/users', async (req, res) => {
+  const user = await User.create(req.body);
+  res.status(201).json(user);
+});
+
+// Update user
+app.put('/api/users/:id', async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.params.id, req.body);
+  res.json(user);
+});
+
+// Delete user
+app.delete('/api/users/:id', async (req, res) => {
+  await User.findByIdAndDelete(req.params.id);
+  res.status(204).send();
+});`}
+/>
+
+## What is GraphQL?
+
+GraphQL is a query language and runtime that allows clients to request exactly the data they need:
+
+<AdvancedCode
+  type="code"
+  language="javascript"
+  code={`// GraphQL Schema Definition
+const typeDefs = \`
+  type User {
+    id: ID!
+    name: String!
+    email: String!
+    posts: [Post!]!
+    createdAt: String!
+  }
+  
+  type Post {
+    id: ID!
+    title: String!
+    content: String!
+    author: User!
+    comments: [Comment!]!
+  }
+  
+  type Comment {
+    id: ID!
+    text: String!
+    author: User!
+    post: Post!
+  }
+  
+  type Query {
+    user(id: ID!): User
+    users: [User!]!
+    post(id: ID!): Post
+    posts: [Post!]!
+  }
+  
+  type Mutation {
+    createUser(name: String!, email: String!): User!
+    updateUser(id: ID!, name: String, email: String): User!
+    deleteUser(id: ID!): Boolean!
+    createPost(title: String!, content: String!, authorId: ID!): Post!
+  }
+\`;
+
+// Resolvers
+const resolvers = {
+  Query: {
+    user: async (_, { id }) => await User.findById(id),
+    users: async () => await User.findAll(),
+    post: async (_, { id }) => await Post.findById(id),
+    posts: async () => await Post.findAll(),
+  },
+  
+  Mutation: {
+    createUser: async (_, { name, email }) => {
+      return await User.create({ name, email });
+    },
+    updateUser: async (_, { id, name, email }) => {
+      return await User.findByIdAndUpdate(id, { name, email });
+    },
+    deleteUser: async (_, { id }) => {
+      await User.findByIdAndDelete(id);
+      return true;
+    },
+  },
+  
+  User: {
+    posts: async (user) => await Post.find({ authorId: user.id }),
+  },
+  
+  Post: {
+    author: async (post) => await User.findById(post.authorId),
+    comments: async (post) => await Comment.find({ postId: post.id }),
+  },
+};`}
+/>
+
+## GraphQL Queries vs REST Requests
+
+### GraphQL Query Examples
+
+<AdvancedCode
+  type="code"
+  language="graphql"
+  code={`# Get specific user fields
+query GetUser($id: ID!) {
+  user(id: $id) {
+    id
+    name
+    email
+  }
+}
+
+# Get user with their posts
+query GetUserWithPosts($id: ID!) {
+  user(id: $id) {
+    id
+    name
+    email
+    posts {
+      id
+      title
+      createdAt
+    }
+  }
+}
+
+# Get multiple resources in one request
+query GetDashboardData {
+  users(limit: 5) {
+    id
+    name
+  }
+  posts(limit: 10) {
+    id
+    title
+    author {
+      name
+    }
+  }
+}
+
+# Mutation example
+mutation CreatePost($title: String!, $content: String!, $authorId: ID!) {
+  createPost(title: $title, content: $content, authorId: $authorId) {
+    id
+    title
+    author {
+      name
+    }
+  }
+}`}
+/>
+
+### REST Request Examples
+
+<AdvancedCode
+  type="command"
+  commands={[
+    { label: 'Get user', code: 'GET /api/users/123' },
+    { label: 'Get user posts', code: 'GET /api/users/123/posts' },
+    { label: 'Get posts', code: 'GET /api/posts' },
+    { label: 'Create post', code: 'POST /api/posts' },
+    { label: 'Update post', code: 'PUT /api/posts/456' }
+  ]}
+/>
+
+## Comparison Table
+
+| Aspect | REST | GraphQL |
+|--------|------|---------|
+| **Data Fetching** | Multiple requests, fixed structure | Single request, flexible structure |
+| **Over/Under-fetching** | Common issue | Eliminated |
+| **Caching** | Easy with HTTP caching | More complex, needs specialized tools |
+| **Learning Curve** | Gentle | Steeper |
+| **Tooling** | Mature ecosystem | Growing ecosystem |
+| **File Uploads** | Native support | Requires additional specification |
+| **Real-time** | Requires additional protocols | Built-in subscriptions |
+
+## REST Advantages
+
+### ✅ Pros
+- **Simplicity**: Easy to understand and implement
+- **Caching**: Excellent HTTP caching support
+- **Maturity**: Established patterns and tooling
+- **Standards**: Well-defined status codes and methods
+- **File Uploads**: Native multipart support
+
+<AdvancedCode
+  type="code"
+  language="javascript"
+  code={`// REST: Simple caching with headers
+app.get('/api/users/:id', async (req, res) => {
+  const user = await User.findById(req.params.id);
+  
+  // Set cache headers
+  res.set({
+    'Cache-Control': 'public, max-age=300', // 5 minutes
+    'ETag': user.updatedAt.getTime().toString(),
+    'Last-Modified': user.updatedAt.toUTCString()
+  });
+  
+  res.json(user);
+});`}
+/>
+
+### ❌ Cons
+- **Over-fetching**: Getting more data than needed
+- **Under-fetching**: Need multiple requests for related data
+- **Versioning**: API versioning complexity
+- **Multiple Endpoints**: Many URLs to maintain
+
+## GraphQL Advantages
+
+### ✅ Pros
+- **Precise Data Fetching**: Get exactly what you need
+- **Single Endpoint**: One URL for all operations
+- **Strong Type System**: Schema-first development
+- **Real-time**: Built-in subscriptions
+- **Introspection**: Self-documenting APIs
+
+<AdvancedCode
+  type="code"
+  language="javascript"
+  code={`// GraphQL: Subscriptions for real-time data
+const typeDefs = \`
+  type Subscription {
+    messageAdded: Message!
+    userOnline: User!
+  }
+\`;
+
+const resolvers = {
+  Subscription: {
+    messageAdded: {
+      subscribe: () => pubsub.asyncIterator(['MESSAGE_ADDED']),
+    },
+    userOnline: {
+      subscribe: () => pubsub.asyncIterator(['USER_ONLINE']),
+    },
+  },
+};
+
+// Client-side subscription
+const subscription = gql\`
+  subscription OnMessageAdded {
+    messageAdded {
+      id
+      text
+      user {
+        name
+      }
+    }
+  }
+\`;`}
+/>
+
+### ❌ Cons
+- **Complexity**: Steeper learning curve
+- **Caching**: More complex than HTTP caching
+- **N+1 Problem**: Can lead to inefficient database queries
+- **Overhead**: Can be overkill for simple APIs
+
+## When to Choose REST
+
+Choose REST when:
+- Building simple CRUD applications
+- Team has limited GraphQL experience
+- Heavy reliance on HTTP caching
+- Need standard tooling and monitoring
+- File uploads are frequent
+
+## When to Choose GraphQL
+
+Choose GraphQL when:
+- Frontend needs flexible data fetching
+- Multiple clients with different data needs
+- Real-time features are important
+- Complex data relationships exist
+- Want type safety and documentation
+
+## Hybrid Approach
+
+You can also use both:
+
+<AdvancedCode
+  type="code"
+  language="javascript"
+  code={`// Use REST for simple operations
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'healthy' });
+});
+
+// Use GraphQL for complex data operations
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  rootValue: resolvers,
+  graphiql: true,
+}));
+
+// REST for file uploads
+app.post('/api/upload', upload.single('file'), (req, res) => {
+  res.json({ filename: req.file.filename });
+});`}
+/>
+
+## Performance Considerations
+
+### REST Optimizations
+- Implement proper caching strategies
+- Use compression middleware
+- Add pagination for large datasets
+- Include only necessary fields with query parameters
+
+### GraphQL Optimizations
+- Implement DataLoader for N+1 problem
+- Use query complexity analysis
+- Add query depth limiting
+- Cache at resolver level
+
+Both GraphQL and REST are valid choices - the best option depends on your specific requirements, team expertise, and use cases. Many successful applications use a combination of both approaches!

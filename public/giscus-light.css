@@ -1,0 +1,218 @@
+/* Giscus Light Theme - Black Aesthetic */
+.giscus, .giscus-frame {
+  color-scheme: light;
+}
+
+.giscus .container {
+  background-color: #ffffff;
+  border-color: #e5e5e5;
+  color: #24292f;
+}
+
+/* Main discussion container */
+.giscus .main {
+  background-color: #ffffff;
+}
+
+/* Header */
+.giscus .header {
+  background-color: #f6f8fa;
+  border-bottom: 1px solid #e5e5e5;
+  color: #24292f;
+}
+
+/* Comment form */
+.giscus .comment-form {
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+
+.giscus .comment-form textarea {
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  color: #24292f;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  border-radius: 6px;
+}
+
+.giscus .comment-form textarea:focus {
+  border-color: #24292f;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(36, 41, 47, 0.1);
+}
+
+/* Buttons */
+.giscus .btn-primary {
+  background-color: #24292f;
+  border-color: #24292f;
+  color: #ffffff;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.giscus .btn-primary:hover {
+  background-color: #1c2128;
+  border-color: #1c2128;
+}
+
+.giscus .btn-outline {
+  background-color: transparent;
+  border: 1px solid #e5e5e5;
+  color: #24292f;
+  font-family: 'Roboto Mono', monospace;
+  border-radius: 6px;
+}
+
+.giscus .btn-outline:hover {
+  background-color: #f6f8fa;
+  border-color: #24292f;
+}
+
+/* Comments */
+.giscus .comment {
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.giscus .comment-header {
+  background-color: #f6f8fa;
+  border-bottom: 1px solid #e5e5e5;
+  border-radius: 8px 8px 0 0;
+  padding: 12px 16px;
+}
+
+.giscus .comment-author {
+  color: #24292f;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 600;
+}
+
+.giscus .comment-timestamp {
+  color: #656d76;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px;
+}
+
+.giscus .comment-body {
+  padding: 16px;
+  color: #24292f;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+/* Code blocks in comments */
+.giscus .comment-body code {
+  background-color: #f6f8fa;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+  padding: 2px 4px;
+}
+
+.giscus .comment-body pre {
+  background-color: #f6f8fa;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+  overflow: auto;
+  padding: 12px;
+}
+
+.giscus .comment-body pre code {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* Reactions */
+.giscus .reaction-button {
+  background-color: #f6f8fa;
+  border: 1px solid #e5e5e5;
+  border-radius: 20px;
+  color: #656d76;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px;
+  padding: 4px 8px;
+  transition: all 0.2s ease;
+}
+
+.giscus .reaction-button:hover {
+  background-color: #24292f;
+  border-color: #24292f;
+  color: #ffffff;
+}
+
+.giscus .reaction-button.reacted {
+  background-color: #24292f;
+  border-color: #24292f;
+  color: #ffffff;
+}
+
+/* Links */
+.giscus a {
+  color: #24292f;
+  text-decoration: underline;
+  text-decoration-color: rgba(36, 41, 47, 0.3);
+  transition: text-decoration-color 0.2s ease;
+}
+
+.giscus a:hover {
+  text-decoration-color: #24292f;
+}
+
+/* Loading skeleton */
+.giscus .loading-skeleton {
+  background: linear-gradient(90deg, #f6f8fa 25%, #ffffff 50%, #f6f8fa 75%);
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Avatar */
+.giscus .avatar {
+  border-radius: 50%;
+  border: 2px solid #e5e5e5;
+}
+
+/* Pagination */
+.giscus .pagination-button {
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  color: #24292f;
+  font-family: 'Roboto Mono', monospace;
+  border-radius: 6px;
+  padding: 8px 16px;
+}
+
+.giscus .pagination-button:hover {
+  background-color: #f6f8fa;
+  border-color: #24292f;
+}
+
+/* Sign in prompt */
+.giscus .signin-prompt {
+  background-color: #f6f8fa;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  color: #24292f;
+  font-family: 'Roboto Mono', monospace;
+  padding: 16px;
+  text-align: center;
+}
+
+.giscus .signin-prompt a {
+  color: #24292f;
+  font-weight: 600;
+}

@@ -1,0 +1,348 @@
+/* Custom Giscus Theme - Terminal Style
+ * Matches the personal website's black/white theme with terminal aesthetics
+ */
+@import "@fontsource/jetbrains-mono"; 
+:root {
+  /* Light mode variables */
+  --giscus-bg: oklch(1 0 0); /* Pure white background */
+  --giscus-fg: oklch(0 0 0); /* Black text */
+  --giscus-border: oklch(0.8 0 0); /* Light gray borders */
+  --giscus-card-bg: oklch(0.98 0 0); /* Very light background for cards */
+  --giscus-input-bg: oklch(0.95 0 0); /* Input background */
+  --giscus-button-bg: oklch(0 0 0); /* Black buttons */
+  --giscus-button-fg: oklch(1 0 0); /* White button text */
+  --giscus-button-hover-bg: oklch(0.2 0 0); /* Dark gray on hover */
+  --giscus-muted: oklch(0.6 0 0); /* Muted text */
+  --giscus-accent: oklch(0 0 0); /* Black accent */
+  --giscus-link: oklch(0.3 0 0); /* Dark links */
+  --giscus-shadow: rgba(0, 0, 0, 0.1);
+  font-family: 'Jetbrains Mono', monospace;
+}
+
+.dark {
+  /* Dark mode variables */
+  --giscus-bg: oklch(0 0 0); /* Pure black background */
+  --giscus-fg: oklch(1 0 0); /* White text */
+  --giscus-border: oklch(0.2 0 0); /* Dark gray borders */
+  --giscus-card-bg: oklch(0.05 0 0); /* Very dark background for cards */
+  --giscus-input-bg: oklch(0.1 0 0); /* Input background */
+  --giscus-button-bg: oklch(1 0 0); /* White buttons */
+  --giscus-button-fg: oklch(0 0 0); /* Black button text */
+  --giscus-button-hover-bg: oklch(0.8 0 0); /* Light gray on hover */
+  --giscus-muted: oklch(0.6 0 0); /* Muted text */
+  --giscus-accent: oklch(1 0 0); /* White accent */
+  --giscus-link: oklch(0.8 0 0); /* Light links */
+  --giscus-shadow: rgba(255, 255, 255, 0.1);
+}
+
+/* Main Giscus Container */
+.giscus {
+  --color-prettylights-syntax-comment: var(--giscus-muted) !important;
+  --color-prettylights-syntax-constant: var(--giscus-fg) !important;
+  --color-prettylights-syntax-entity: var(--giscus-accent) !important;
+  --color-prettylights-syntax-storage-modifier-import: var(--giscus-fg) !important;
+  --color-prettylights-syntax-entity-tag: var(--giscus-accent) !important;
+  --color-prettylights-syntax-keyword: var(--giscus-accent) !important;
+  --color-prettylights-syntax-string: var(--giscus-fg) !important;
+  --color-prettylights-syntax-variable: var(--giscus-fg) !important;
+  --color-prettylights-syntax-brackethighlighter-unmatched: var(--giscus-fg) !important;
+  --color-prettylights-syntax-invalid-illegal: var(--giscus-fg) !important;
+  --color-prettylights-syntax-carriage-return: var(--giscus-fg) !important;
+  --color-prettylights-syntax-string-regexp: var(--giscus-accent) !important;
+  --color-prettylights-syntax-markup-list: var(--giscus-fg) !important;
+  --color-prettylights-syntax-markup-heading: var(--giscus-accent) !important;
+  --color-prettylights-syntax-markup-italic: var(--giscus-fg) !important;
+  --color-prettylights-syntax-markup-bold: var(--giscus-fg) !important;
+  --color-prettylights-syntax-markup-deleted-text: var(--giscus-fg) !important;
+  --color-prettylights-syntax-markup-inserted-text: var(--giscus-fg) !important;
+  --color-prettylights-syntax-markup-changed-text: var(--giscus-fg) !important;
+  --color-prettylights-syntax-markup-ignored-text: var(--giscus-muted) !important;
+  --color-prettylights-syntax-meta-diff-range: var(--giscus-accent) !important;
+  --color-prettylights-syntax-brackethighlighter-angle: var(--giscus-muted) !important;
+  --color-prettylights-syntax-sublimelinter-gutter-mark: var(--giscus-muted) !important;
+  --color-prettylights-syntax-constant-other-reference-link: var(--giscus-link) !important;
+  
+  /* Base colors */
+  --color-fg-default: var(--giscus-fg) !important;
+  --color-fg-muted: var(--giscus-muted) !important;
+  --color-fg-subtle: var(--giscus-muted) !important;
+  --color-canvas-default: var(--giscus-bg) !important;
+  --color-canvas-overlay: var(--giscus-card-bg) !important;
+  --color-canvas-inset: var(--giscus-card-bg) !important;
+  --color-canvas-subtle: var(--giscus-card-bg) !important;
+  
+  /* Borders */
+  --color-border-default: var(--giscus-border) !important;
+  --color-border-muted: var(--giscus-border) !important;
+  --color-border-subtle: var(--giscus-border) !important;
+  
+  /* Buttons */
+  --color-btn-text: var(--giscus-button-fg) !important;
+  --color-btn-bg: var(--giscus-button-bg) !important;
+  --color-btn-border: var(--giscus-button-bg) !important;
+  --color-btn-shadow: var(--giscus-shadow) !important;
+  --color-btn-inset-shadow: inset 0 1px 0 var(--giscus-shadow) !important;
+  --color-btn-hover-bg: var(--giscus-button-hover-bg) !important;
+  --color-btn-hover-border: var(--giscus-button-hover-bg) !important;
+  --color-btn-active-bg: var(--giscus-button-hover-bg) !important;
+  --color-btn-active-border: var(--giscus-button-hover-bg) !important;
+  --color-btn-selected-bg: var(--giscus-button-bg) !important;
+  
+  /* Primary buttons */
+  --color-btn-primary-text: var(--giscus-button-fg) !important;
+  --color-btn-primary-bg: var(--giscus-button-bg) !important;
+  --color-btn-primary-border: var(--giscus-button-bg) !important;
+  --color-btn-primary-shadow: var(--giscus-shadow) !important;
+  --color-btn-primary-inset-shadow: inset 0 1px 0 var(--giscus-shadow) !important;
+  --color-btn-primary-hover-bg: var(--giscus-button-hover-bg) !important;
+  --color-btn-primary-hover-border: var(--giscus-button-hover-bg) !important;
+  --color-btn-primary-selected-bg: var(--giscus-button-bg) !important;
+  --color-btn-primary-selected-shadow: var(--giscus-shadow) !important;
+  --color-btn-primary-disabled-text: var(--giscus-muted) !important;
+  --color-btn-primary-disabled-bg: var(--giscus-border) !important;
+  --color-btn-primary-disabled-border: var(--giscus-border) !important;
+  
+  /* Links */
+  --color-accent-fg: var(--giscus-link) !important;
+  --color-accent-emphasis: var(--giscus-accent) !important;
+  --color-attention-fg: var(--giscus-accent) !important;
+  --color-attention-emphasis: var(--giscus-accent) !important;
+  --color-attention-subtle: var(--giscus-card-bg) !important;
+  --color-success-fg: var(--giscus-accent) !important;
+  --color-success-emphasis: var(--giscus-accent) !important;
+  --color-danger-fg: var(--giscus-accent) !important;
+  --color-danger-emphasis: var(--giscus-accent) !important;
+  
+  /* Inputs */
+  --color-input-bg: var(--giscus-input-bg) !important;
+  --color-input-border: var(--giscus-border) !important;
+  --color-input-shadow: var(--giscus-shadow) !important;
+  --color-input-contrast-bg: var(--giscus-card-bg) !important;
+  
+  /* Reactions */
+  --color-social-reaction-bg-hover: var(--giscus-card-bg) !important;
+  --color-social-reaction-bg-reacted-hover: var(--giscus-card-bg) !important;
+  
+}
+
+/* Terminal window styling for giscus */
+.giscus {
+  border: 1px solid var(--giscus-border) !important;
+  border-radius: 0.5rem !important;
+  background: var(--giscus-bg) !important;
+  box-shadow: 0 4px 6px -1px var(--giscus-shadow), 0 2px 4px -1px var(--giscus-shadow) !important;
+  overflow: hidden !important;
+}
+
+/* Header styling */
+.giscus .gsc-header {
+  background: var(--giscus-card-bg) !important;
+  border-bottom: 1px solid var(--giscus-border) !important;
+  padding: 0.75rem 1rem !important;
+  position: relative !important;
+}
+
+/* Add terminal dots to header */
+.giscus .gsc-header:before {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--giscus-muted);
+  box-shadow: 
+    18px 0 0 var(--giscus-muted),
+    36px 0 0 var(--giscus-accent);
+}
+
+/* Comment styling */
+.giscus .gsc-comment {
+  border: 1px solid var(--giscus-border) !important;
+  border-radius: 0.375rem !important;
+  background: var(--giscus-card-bg) !important;
+  margin-bottom: 1rem !important;
+}
+
+.giscus .gsc-comment-header {
+  background: transparent !important;
+  border-bottom: 1px solid var(--giscus-border) !important;
+  padding: 0.75rem 1rem !important;
+}
+
+.giscus .gsc-comment-content {
+  padding: 1rem !important;
+  background: transparent !important;
+}
+
+/* Timeline connector styling */
+.giscus .gsc-timeline::before {
+  background: var(--giscus-border) !important;
+}
+
+/* Avatar styling */
+.giscus .gsc-comment-author-avatar img {
+  border-radius: 0.25rem !important;
+  border: 1px solid var(--giscus-border) !important;
+}
+
+/* Input area styling */
+.giscus .gsc-comment-box {
+  border: 1px solid var(--giscus-border) !important;
+  border-radius: 0.375rem !important;
+  background: var(--giscus-input-bg) !important;
+}
+
+.giscus .gsc-comment-box-textarea {
+  background: transparent !important;
+  color: var(--giscus-fg) !important;
+  border: none !important;
+}
+
+.giscus .gsc-comment-box-textarea::placeholder {
+  color: var(--giscus-muted) !important;
+}
+
+/* Button styling */
+.giscus .gsc-comment-box-buttons {
+  background: transparent !important;
+  border-top: 1px solid var(--giscus-border) !important;
+}
+
+.giscus button {
+  border-radius: 0.25rem !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Reaction buttons */
+.giscus .gsc-reactions {
+  gap: 0.5rem !important;
+}
+
+.giscus .gsc-reactions-menu button {
+  border: 1px solid var(--giscus-border) !important;
+  background: var(--giscus-card-bg) !important;
+  color: var(--giscus-fg) !important;
+  border-radius: 0.25rem !important;
+  padding: 0.25rem 0.5rem !important;
+}
+
+.giscus .gsc-reactions-menu button:hover {
+  background: var(--giscus-button-hover-bg) !important;
+  color: var(--giscus-button-fg) !important;
+}
+
+/* Loading states */
+.giscus .gsc-loading {
+  color: var(--giscus-muted) !important;
+}
+
+/* Error states */
+.giscus .gsc-error {
+  color: var(--giscus-fg) !important;
+  background: var(--giscus-card-bg) !important;
+  border: 1px solid var(--giscus-border) !important;
+  border-radius: 0.375rem !important;
+  padding: 1rem !important;
+}
+
+/* Links */
+.giscus a {
+  color: var(--giscus-link) !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+.giscus a:hover {
+  color: var(--giscus-accent) !important;
+  border-bottom-color: var(--giscus-accent) !important;
+}
+
+/* Code blocks */
+.giscus pre {
+  background: var(--giscus-card-bg) !important;
+  border: 1px solid var(--giscus-border) !important;
+  border-radius: 0.25rem !important;
+  color: var(--giscus-fg) !important;
+}
+
+.giscus code {
+  background: var(--giscus-card-bg) !important;
+  color: var(--giscus-fg) !important;
+  padding: 0.125rem 0.25rem !important;
+  border-radius: 0.125rem !important;
+}
+
+/* Blockquotes */
+.giscus blockquote {
+  border-left: 4px solid var(--giscus-accent) !important;
+  padding-left: 1rem !important;
+  color: var(--giscus-muted) !important;
+  background: var(--giscus-card-bg) !important;
+  margin: 1rem 0 !important;
+  padding: 0.5rem 0 0.5rem 1rem !important;
+  border-radius: 0 0.25rem 0.25rem 0 !important;
+}
+
+/* Tables */
+.giscus table {
+  border-collapse: collapse !important;
+  border: 1px solid var(--giscus-border) !important;
+  border-radius: 0.25rem !important;
+}
+
+.giscus th,
+.giscus td {
+  border: 1px solid var(--giscus-border) !important;
+  padding: 0.5rem !important;
+}
+
+.giscus th {
+  background: var(--giscus-card-bg) !important;
+  font-weight: 600 !important;
+}
+
+/* Scrollbar styling */
+.giscus *::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
+}
+
+.giscus *::-webkit-scrollbar-track {
+  background: var(--giscus-card-bg) !important;
+  border-radius: 4px !important;
+}
+
+.giscus *::-webkit-scrollbar-thumb {
+  background: var(--giscus-border) !important;
+  border-radius: 4px !important;
+}
+
+.giscus *::-webkit-scrollbar-thumb:hover {
+  background: var(--giscus-muted) !important;
+}
+
+/* Focus states */
+.giscus *:focus {
+  outline: 2px solid var(--giscus-accent) !important;
+  outline-offset: 2px !important;
+}
+
+.giscus input:focus,
+.giscus textarea:focus {
+  border-color: var(--giscus-accent) !important;
+  box-shadow: 0 0 0 1px var(--giscus-accent) !important;
+}
+
+/* Animation for loading */
+@keyframes giscus-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.giscus .gsc-loading * {
+  animation: giscus-pulse 2s infinite !important;
+}

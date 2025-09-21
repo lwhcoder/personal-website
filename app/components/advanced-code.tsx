@@ -43,7 +43,7 @@ export function AdvancedCode({
   }
 
   return (
-    <div className="bg-black border-2 rounded-md overflow-hidden font-mono text-sm my-6">
+    <div className="bg-black border max-w-full rounded-md overflow-hidden font-mono text-sm my-6">
       {/* Top bar: Language/Command selector + Copy button */}
       <div className="flex items-center justify-between px-4 pt-3">
         {/* Show either tabs for commands OR just the language label */}
@@ -57,7 +57,7 @@ export function AdvancedCode({
                   'text-xs px-2 py-1 rounded transition-colors',
                   selectedCmd === label
                     ? 'bg-white text-black'
-                    : 'text-white/50 hover:text-white'
+                    : 'text-white/60 hover:text-white'
                 )}
               >
                 {label}
@@ -65,7 +65,7 @@ export function AdvancedCode({
             ))}
           </div>
         ) : (
-          <span className="text-xs uppercase tracking-wide font-semibold bg-white text-black p-1 rounded px-2">
+          <span className="text-xs uppercase tracking-wide font-semibold bg-white text-black px-2 py-1 rounded">
             {language}
           </span>
         )}
@@ -73,7 +73,7 @@ export function AdvancedCode({
         {/* Copy Button */}
         <button
           onClick={handleCopy}
-          className="ml-auto text-muted-foreground hover:text-foreground transition"
+          className="ml-auto text-white/60 hover:text-white transition"
           title="Copy to clipboard"
         >
           {copied ? <Check size={16} /> : <ClipboardCopy size={16} />}
@@ -92,12 +92,13 @@ export function AdvancedCode({
                       key={key}
                       {...getTokenProps({ token })}
                       className={clsx(
-                        token.types.includes('keyword') && 'text-muted-foreground',
-                        token.types.includes('string') && 'text-foreground',
-                        token.types.includes('function') && 'text-foreground',
-                        token.types.includes('punctuation') && 'text-muted-foreground',
-                        token.types.includes('comment') && 'text-muted-foreground',
-                        token.types.includes('plain') && 'text-foreground'
+                        'text-white',
+                        token.types.includes('keyword') && 'text-blue-400 font-semibold',
+                        token.types.includes('string') && 'text-green-400',
+                        token.types.includes('function') && 'text-yellow-400',
+                        token.types.includes('punctuation') && 'text-gray-300',
+                        token.types.includes('comment') && 'text-gray-500 italic',
+                        token.types.includes('number') && 'text-orange-400'
                       )}
                     >
                       {token.content}

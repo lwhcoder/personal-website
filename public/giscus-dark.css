@@ -1,0 +1,269 @@
+/* Giscus Dark Theme - Black Aesthetic */
+.giscus, .giscus-frame {
+  color-scheme: dark;
+}
+
+.giscus .container {
+  background-color: #0d1117;
+  border-color: #30363d;
+  color: #f0f6fc;
+}
+
+/* Main discussion container */
+.giscus .main {
+  background-color: #0d1117;
+}
+
+/* Header */
+.giscus .header {
+  background-color: #161b22;
+  border-bottom: 1px solid #30363d;
+  color: #f0f6fc;
+}
+
+/* Comment form */
+.giscus .comment-form {
+  background-color: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+}
+
+.giscus .comment-form textarea {
+  background-color: #0d1117;
+  border: 1px solid #30363d;
+  color: #f0f6fc;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  border-radius: 6px;
+}
+
+.giscus .comment-form textarea:focus {
+  border-color: #f0f6fc;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(240, 246, 252, 0.1);
+}
+
+.giscus .comment-form textarea::placeholder {
+  color: #8b949e;
+}
+
+/* Buttons */
+.giscus .btn-primary {
+  background-color: #f0f6fc;
+  border-color: #f0f6fc;
+  color: #0d1117;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.giscus .btn-primary:hover {
+  background-color: #e6edf3;
+  border-color: #e6edf3;
+}
+
+.giscus .btn-outline {
+  background-color: transparent;
+  border: 1px solid #30363d;
+  color: #f0f6fc;
+  font-family: 'Roboto Mono', monospace;
+  border-radius: 6px;
+}
+
+.giscus .btn-outline:hover {
+  background-color: #21262d;
+  border-color: #f0f6fc;
+}
+
+/* Comments */
+.giscus .comment {
+  background-color: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.giscus .comment-header {
+  background-color: #161b22;
+  border-bottom: 1px solid #30363d;
+  border-radius: 8px 8px 0 0;
+  padding: 12px 16px;
+}
+
+.giscus .comment-author {
+  color: #f0f6fc;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 600;
+}
+
+.giscus .comment-timestamp {
+  color: #8b949e;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px;
+}
+
+.giscus .comment-body {
+  padding: 16px;
+  color: #f0f6fc;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+/* Code blocks in comments */
+.giscus .comment-body code {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  color: #f0f6fc;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+  padding: 2px 4px;
+}
+
+.giscus .comment-body pre {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  color: #f0f6fc;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+  overflow: auto;
+  padding: 12px;
+}
+
+.giscus .comment-body pre code {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* Reactions */
+.giscus .reaction-button {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 20px;
+  color: #8b949e;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px;
+  padding: 4px 8px;
+  transition: all 0.2s ease;
+}
+
+.giscus .reaction-button:hover {
+  background-color: #f0f6fc;
+  border-color: #f0f6fc;
+  color: #0d1117;
+}
+
+.giscus .reaction-button.reacted {
+  background-color: #f0f6fc;
+  border-color: #f0f6fc;
+  color: #0d1117;
+}
+
+/* Links */
+.giscus a {
+  color: #f0f6fc;
+  text-decoration: underline;
+  text-decoration-color: rgba(240, 246, 252, 0.3);
+  transition: text-decoration-color 0.2s ease;
+}
+
+.giscus a:hover {
+  text-decoration-color: #f0f6fc;
+}
+
+/* Loading skeleton */
+.giscus .loading-skeleton {
+  background: linear-gradient(90deg, #161b22 25%, #0d1117 50%, #161b22 75%);
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Avatar */
+.giscus .avatar {
+  border-radius: 50%;
+  border: 2px solid #30363d;
+}
+
+/* Pagination */
+.giscus .pagination-button {
+  background-color: #0d1117;
+  border: 1px solid #30363d;
+  color: #f0f6fc;
+  font-family: 'Roboto Mono', monospace;
+  border-radius: 6px;
+  padding: 8px 16px;
+}
+
+.giscus .pagination-button:hover {
+  background-color: #21262d;
+  border-color: #f0f6fc;
+}
+
+/* Sign in prompt */
+.giscus .signin-prompt {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  color: #f0f6fc;
+  font-family: 'Roboto Mono', monospace;
+  padding: 16px;
+  text-align: center;
+}
+
+.giscus .signin-prompt a {
+  color: #f0f6fc;
+  font-weight: 600;
+}
+
+/* Scrollbar styling */
+.giscus *::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.giscus *::-webkit-scrollbar-track {
+  background: #161b22;
+  border-radius: 4px;
+}
+
+.giscus *::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 4px;
+}
+
+.giscus *::-webkit-scrollbar-thumb:hover {
+  background: #484f58;
+}
+
+/* Additional dark mode specific styles */
+.giscus .markdown-body {
+  background-color: #0d1117;
+  color: #f0f6fc;
+}
+
+.giscus .markdown-body blockquote {
+  border-left: 4px solid #30363d;
+  background-color: #161b22;
+  color: #8b949e;
+}
+
+.giscus .markdown-body table {
+  border-color: #30363d;
+}
+
+.giscus .markdown-body table th,
+.giscus .markdown-body table td {
+  border-color: #30363d;
+}
+
+.giscus .markdown-body table tr:nth-child(2n) {
+  background-color: #161b22;
+}

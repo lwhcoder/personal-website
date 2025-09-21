@@ -61,7 +61,7 @@ export default function Home() {
             <div className="max-w-6xl mx-auto">
               <div className="text-center space-y-8">
                 {/* Terminal-style greeting */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-muted font-mono text-sm">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full  bg-muted font-mono text-sm">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                   <span>Currently available for new projects</span>
                 </div>
@@ -131,7 +131,7 @@ export default function Home() {
                 staggerDelay={100}
                 className="grid md:grid-cols-3 gap-8"
               >
-                <Card className="text-center hover:shadow-lg transition-shadow">
+                <Card className="text-center hover:shadow-lg transition-shadow border-none">
                   <CardHeader>
                     <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                       <Code className="w-6 h-6 text-primary" />
@@ -146,7 +146,7 @@ export default function Home() {
                   </CardContent>
                 </Card>
                 
-                <Card className="text-center hover:shadow-lg transition-shadow">
+                <Card className="text-center hover:shadow-lg transition-shadow border-none">
                   <CardHeader>
                     <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                       <Laptop className="w-6 h-6 text-primary" />
@@ -161,7 +161,7 @@ export default function Home() {
                   </CardContent>
                 </Card>
                 
-                <Card className="text-center hover:shadow-lg transition-shadow">
+                <Card className="text-center hover:shadow-lg transition-shadow border-none">
                   <CardHeader>
                     <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                       <Zap className="w-6 h-6 text-primary" />
@@ -225,7 +225,7 @@ export default function Home() {
                 className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
               >
                 {projects.map((project, index) => (
-                  <Card key={project.title} className="hover:shadow-lg transition-all hover:scale-[1.02]">
+                  <Card key={project.title} className="hover:shadow-lg transition-all hover:scale-[1.02] border-none">
                     <CardHeader>
                       <div className="flex items-center justify-between mb-2">
                         <CardTitle className="text-lg">{project.title}</CardTitle>
@@ -240,7 +240,7 @@ export default function Home() {
                     <CardContent>
                       <div className="flex flex-wrap gap-2">
                         {project.tech.map((tech) => (
-                          <Badge key={tech} variant="outline" className="text-xs">
+                          <Badge key={tech} variant="outline" className="text-xs bg-primary text-background">
                             {tech}
                           </Badge>
                         ))}
@@ -290,7 +290,7 @@ export default function Home() {
 
                 <div className="relative">
                   {/* Code-style decorative element */}
-                  <div className="bg-black border rounded-lg p-6 font-mono text-sm">
+                  <div className="bg-black rounded-lg p-6 font-mono text-sm">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                       <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
