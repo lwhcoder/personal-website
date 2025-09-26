@@ -1,8 +1,8 @@
 import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
-import { Separator } from "~/components/ui/separator"
-import { Download, ExternalLink, Github, Mail, MapPin, Calendar, Coffee, Code, Heart, Zap } from "lucide-react"
+import { Card, CardContent } from "~/components/ui/card"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "~/components/ui/carousel"
+import { ExternalLink, Github, MapPin, Calendar, Coffee, Code, Heart, Zap } from "lucide-react"
 import { PageTransition, ScrollReveal, StaggeredList } from "~/components/page-transitions"
 import { QuickComments } from "~/components/comment-utils"
 
@@ -79,10 +79,7 @@ export default function About() {
         <ScrollReveal direction="up" delay={0}>
           <section className="relative py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
             {/* Background Pattern */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5"></div>
-            <div className="absolute top-20 right-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-20 left-20 w-96 h-96 bg-secondary/10 rounded-full blur-3xl"></div>
-            
+
             <div className="relative max-w-6xl mx-auto">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 <div>
@@ -90,8 +87,8 @@ export default function About() {
                     Hi, I'm <span className="text-primary">lwh</span>
                   </h1>
                   <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                    A passionate full-stack developer with 5+ years of experience crafting digital experiences 
-                    that matter. I specialize in building scalable web applications using modern technologies 
+                    A passionate full-stack developer with 5+ years of experience crafting digital experiences
+                    that matter. I specialize in building scalable web applications using modern technologies
                     and best practices.
                   </p>
                   <div className="flex items-center gap-4 mb-8 text-muted-foreground">
@@ -107,20 +104,25 @@ export default function About() {
                     </Button>
                   </div>
                 </div>
-                
-                <div className="relative">
-                  <div className="aspect-square max-w-md mx-auto relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary rounded-3xl rotate-6"></div>
-                    <div className="relative bg-background rounded-3xl p-8 shadow-2xl">
-                      <div className="w-full h-64 bg-muted rounded-2xl mb-6 flex items-center justify-center">
-                        <span className="text-6xl font-bold text-muted-foreground">LW</span>
-                      </div>
-                      <div className="text-center">
-                        <h3 className="text-xl font-semibold mb-2">Full-Stack Developer</h3>
-                        <p className="text-sm text-muted-foreground">Building the future, one line at a time</p>
-                      </div>
-                    </div>
-                  </div>
+
+                <div className="relative aspect-square">
+                    <Carousel className="w-full max-w-xs">
+      <CarouselContent>
+        {Array.from({ length: 5 }).map((_, index) => (
+          <CarouselItem key={index}>
+            <div className="p-1">
+              <Card>
+                <CardContent className="flex aspect-square items-center justify-center p-6">
+                  <span className="text-4xl font-semibold">{index + 1}</span>
+                </CardContent>
+              </Card>
+            </div>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
                 </div>
               </div>
             </div>
@@ -155,7 +157,7 @@ export default function About() {
               <div className="text-center mb-16">
                 <h2 className="text-4xl font-bold mb-6">My Journey</h2>
                 <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                  From a curious computer science student to a seasoned developer, 
+                  From a curious computer science student to a seasoned developer,
                   my path has been shaped by continuous learning and a passion for creating meaningful digital experiences.
                 </p>
               </div>
@@ -167,22 +169,22 @@ export default function About() {
                   </div>
                   <h3 className="text-2xl font-semibold mb-4">The Beginning</h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    My journey into programming started during my university years when I stumbled upon web development 
-                    during a computer science course. The ability to create interactive experiences that could reach 
-                    anyone with an internet connection fascinated me. I spent countless nights learning HTML, CSS, 
+                    My journey into programming started during my university years when I stumbled upon web development
+                    during a computer science course. The ability to create interactive experiences that could reach
+                    anyone with an internet connection fascinated me. I spent countless nights learning HTML, CSS,
                     and JavaScript, building small projects and gradually falling in love with the craft.
                   </p>
                 </Card>
 
                 <Card className="p-8 border-none">
                   <div className="w-16 h-16 bg-secondary/10 rounded-lg flex items-center justify-center mb-6">
-                    <Zap className="w-8 h-8 text-secondary" />
+                    <Zap className="w-8 h-8" />
                   </div>
                   <h3 className="text-2xl font-semibold mb-4">The Evolution</h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    As I progressed in my career, I evolved from focusing solely on frontend development to becoming 
-                    a full-stack developer. I learned that understanding both client and server-side technologies 
-                    allows me to build more cohesive and efficient applications. Each project taught me something 
+                    As I progressed in my career, I evolved from focusing solely on frontend development to becoming
+                    a full-stack developer. I learned that understanding both client and server-side technologies
+                    allows me to build more cohesive and efficient applications. Each project taught me something
                     new, from database optimization to user experience design.
                   </p>
                 </Card>
@@ -192,10 +194,10 @@ export default function About() {
                 <h3 className="text-2xl font-semibold mb-6 text-center">What Drives Me</h3>
                 <div className="prose prose-lg max-w-none text-center">
                   <p className="text-muted-foreground leading-relaxed">
-                    I believe that great software is not just about clean code—it's about solving real problems 
-                    for real people. Every line of code I write is guided by empathy for the end user and a 
-                    commitment to creating experiences that are not only functional but delightful. I'm constantly 
-                    learning new technologies and methodologies, staying current with industry trends, and 
+                    I believe that great software is not just about clean code—it's about solving real problems
+                    for real people. Every line of code I write is guided by empathy for the end user and a
+                    commitment to creating experiences that are not only functional but delightful. I'm constantly
+                    learning new technologies and methodologies, staying current with industry trends, and
                     contributing to the developer community through open source projects and knowledge sharing.
                   </p>
                 </div>
@@ -248,7 +250,7 @@ export default function About() {
                             </div>
                           </div>
                         </div>
-                        
+
                         {/* Content */}
                         <div className="lg:col-span-2">
                           <div className="bg-background rounded-2xl p-8 shadow-lg">
@@ -256,7 +258,7 @@ export default function About() {
                             <p className="text-muted-foreground leading-relaxed mb-6">
                               {item.description}
                             </p>
-                            
+
                             {/* Technologies */}
                             <div className="mb-6">
                               <h4 className="text-sm font-semibold mb-3 text-muted-foreground">Technologies Used</h4>
@@ -268,7 +270,7 @@ export default function About() {
                                 ))}
                               </div>
                             </div>
-                            
+
                             {/* Achievements */}
                             <div>
                               <h4 className="text-sm font-semibold mb-3 text-muted-foreground">Key Achievements</h4>
@@ -283,7 +285,7 @@ export default function About() {
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Connector line (optional visual element) */}
                       {index < timeline.length - 1 && (
                         <div className="hidden lg:block absolute left-1/3 transform -translate-x-1/2 mt-8">
@@ -308,7 +310,7 @@ export default function About() {
                   When I'm not coding, you'll find me exploring these interests
                 </p>
               </div>
-              
+
               <div className="grid md:grid-cols-2 gap-6">
                 <StaggeredList staggerDelay={100} className="contents">
                   {interests.map((interest, index) => (
@@ -337,12 +339,12 @@ export default function About() {
 
         {/* CTA */}
         <ScrollReveal direction="up" delay={700}>
-          <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-primary/10 via-background to-secondary/10">
+          <section className="py-24 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-4xl font-bold mb-6">Ready to Build Something Amazing?</h2>
               <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                I'm always excited to work on new projects and collaborate with fellow creators. 
-                Whether you have a specific project in mind or just want to chat about technology, 
+                I'm always excited to work on new projects and collaborate with fellow creators.
+                Whether you have a specific project in mind or just want to chat about technology,
                 I'd love to hear from you.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

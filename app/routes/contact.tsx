@@ -111,7 +111,7 @@ export default function Contact() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen">
+      <div className="min-h-screen border-none">
         {/* Hero Section */}
         <ScrollReveal direction="up" delay={0}>
           <section className="py-24 px-4 sm:px-6 lg:px-8">
@@ -129,7 +129,7 @@ export default function Contact() {
               <div className="grid lg:grid-cols-2 gap-12">
                 {/* Contact Form */ }
                 <ScrollReveal direction="up" delay={200}>
-                  <Card className="max-h-fit rounded-none">
+                  <Card className="max-h-fit rounded-none border-none">
                     <CardHeader>
                       <CardTitle>Send me a message</CardTitle>
                       <p className="text-muted-foreground">
@@ -139,14 +139,14 @@ export default function Contact() {
                     <CardContent>
                       {/* Error Messages */}
                       {actionData && !actionData.success && (
-                        <div className="mb-6 p-4 rounded-lg flex items-center gap-2 bg-red-50 border border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-900/30 dark:text-red-400">
+                        <div className="mb-6 p-4 rounded-lg flex items-center gap-2 bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-900/30 dark:text-red-400">
                           <AlertCircle className="w-5 h-5 flex-shrink-0" />
                           <span className="text-sm font-medium">{actionData.message}</span>
                         </div>
                       )}
 
                       <Form method="post" className="space-y-6">
-                        <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="grid sm:grid-cols-2 gap-4 ">
                           <div className="space-y-2">
                             <Label htmlFor="firstName">First Name</Label>
                             <Input 
@@ -228,10 +228,10 @@ export default function Contact() {
                   </Card>
                 </ScrollReveal>
 
-                {/* Phone Emoji Card */}
+                
                 <ScrollReveal direction="up" delay={400}>
                   <div className="lg:order-first">
-                    <Card className="transition-all rounded-none duration-300 hover:shadow-lg">
+                    <Card className="transition-all border-none rounded-none duration-300 hover:shadow-lg">
                       <CardContent className="p-12">
                         <div className="text-9xl select-none">
                           <img src="https://placehold.co/1280x1780.png"/>
@@ -257,7 +257,7 @@ export default function Contact() {
                           {contactMethods.map((method, index) => {
                             const Icon = method.icon
                             return (
-                              <Card key={index} className="transition-colors rounded-none hover:bg-muted/50">
+                              <Card key={index} className="transition-colors rounded-none border-none hover:bg-muted/50">
                                 <CardContent className="flex items-center gap-4 p-6">
                                   <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                                     <Icon className="w-6 h-6 text-primary" />
@@ -287,7 +287,7 @@ export default function Contact() {
                         className="grid md:grid-cols-2 gap-8"
                       >
                         {/* Location */}
-                        <Card className="rounded-none">
+                        <Card className="rounded-none border-none">
                           <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                               <MapPin className="w-5 h-5" />
@@ -307,7 +307,7 @@ export default function Contact() {
                         </Card>
 
                         {/* Social Links */}
-                        <Card className="rounded-none min-h-full">
+                        <Card className="rounded-none min-h-full border-none">
                           <CardHeader>
                             <CardTitle>Connect on social</CardTitle>
                           </CardHeader>
@@ -333,7 +333,7 @@ export default function Contact() {
 
                       {/* Availability */}
                       <ScrollReveal direction="up" delay={800}>
-                        <Card className="rounded-none">
+                        <Card className="rounded-none border-none">
                           <CardHeader>
                             <CardTitle>Availability</CardTitle>
                           </CardHeader>
@@ -382,7 +382,7 @@ export default function Contact() {
                 staggerDelay={100}
                 className="grid md:grid-cols-2 gap-8"
               >
-                <Card className="min-h-full rounded-none">
+                <Card className="min-h-full rounded-none border-none">
                   <CardHeader>
                     <CardTitle className="text-lg">What's your typical response time?</CardTitle>
                   </CardHeader>
@@ -394,7 +394,7 @@ export default function Contact() {
                   </CardContent>
                 </Card>
 
-                <Card className="min-h-full rounded-none">
+                <Card className="min-h-full rounded-none border-none">
                   <CardHeader>
                     <CardTitle className="text-lg">Do you work with international clients?</CardTitle>
                   </CardHeader>
@@ -406,7 +406,7 @@ export default function Contact() {
                   </CardContent>
                 </Card>
 
-                <Card className="min-h-full rounded-none">
+                <Card className="min-h-full rounded-none border-none">
                   <CardHeader>
                     <CardTitle className="text-lg">What types of projects do you take on?</CardTitle>
                   </CardHeader>
@@ -418,7 +418,7 @@ export default function Contact() {
                   </CardContent>
                 </Card>
 
-                <Card className="min-h-full rounded-none">
+                <Card className="min-h-full rounded-none border-none">
                   <CardHeader>
                     <CardTitle className="text-lg">Do you offer consultation calls?</CardTitle>
                   </CardHeader>

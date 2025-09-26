@@ -8,12 +8,6 @@ import {
     SheetTitle,
     SheetClose,
 } from "./ui/sheet";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import { ThemeToggle } from "./theme-toggle";
 const NAV_ITEMS = [
     { title: "Home", href: "/" },
@@ -21,13 +15,6 @@ const NAV_ITEMS = [
     { title: "Portfolio", href: "/portfolio" },
     { title: "Blog", href: "/blog" },
     { title: "Contact", href: "/contact" },
-];
-
-const TOOLS_ITEMS = [
-    { title: "Quotes", href: "/quotes", description: "Programming wisdom" },
-    { title: "Colors", href: "/color-generator", description: "Color palette generator" },
-    { title: "GitHub", href: "/github-stats", description: "Developer metrics" },
-    { title: "Changelog", href: "/changelog", description: "Site updates" },
 ];
 
 function HamburgerIcon(props: { className?: string }) {
@@ -100,39 +87,7 @@ export default function Navbar() {
                                 {item.title}
                             </a>
                         ))}
-                        
-                        {/* Tools Dropdown */}
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    className="text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-2 h-auto"
-                                >
-                                    Tools
-                                    <svg 
-                                        className="ml-1 h-3 w-3" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="terminal-window">
-                                {TOOLS_ITEMS.map((item) => (
-                                    <DropdownMenuItem key={item.href} asChild>
-                                        <a 
-                                            href={item.href}
-                                            className="flex flex-col items-start w-full font-mono"
-                                        >
-                                            <span className="font-medium">{item.title}</span>
-                                            <span className="text-xs text-muted-foreground">{item.description}</span>
-                                        </a>
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                    
                     </nav>
 
                     {/* Right: actions */}
@@ -166,26 +121,6 @@ export default function Navbar() {
                                                 <span className="text-primary">$</span> {item.title}
                                             </a>
                                         ))}
-                                        
-                                        {/* Tools Section */}
-                                        <div className="border-t border-border pt-4 mt-4">
-                                            <div className="px-3 py-1 text-sm font-medium text-muted-foreground">
-                                                ~/tools
-                                            </div>
-                                            {TOOLS_ITEMS.map((item) => (
-                                                <a
-                                                    key={item.href}
-                                                    href={item.href}
-                                                    className="hover:cursor-pointer block px-3 py-2 rounded-md text-sm font-medium hover:bg-primary/10 transition-all duration-200"
-                                                    onClick={() => setOpen(false)}
-                                                >
-                                                    <div className="flex flex-col">
-                                                        <span><span className="text-primary">$</span> {item.title}</span>
-                                                        <span className="text-xs text-muted-foreground ml-3">{item.description}</span>
-                                                    </div>
-                                                </a>
-                                            ))}
-                                        </div>
                                     </div>
                                 </SheetContent>
                             </Sheet>
