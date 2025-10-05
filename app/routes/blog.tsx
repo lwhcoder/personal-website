@@ -76,7 +76,7 @@ export default function Blog() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [searchQuery, setSearchQuery] = useState("")
   const navigation = useNavigation()
-  
+  console.log(posts)
   // Get selected tag from URL or state
   const selectedTag = searchParams.get("tag") || "all"
   

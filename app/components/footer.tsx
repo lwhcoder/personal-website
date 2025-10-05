@@ -1,4 +1,4 @@
-import { Github, Twitter, Linkedin, Mail } from 'lucide-react'
+import { Github, Twitter, Linkedin, Mail, Disc } from 'lucide-react'
 import { VisitorCounter } from './visitor-counter'
 
 export function Footer() {
@@ -51,16 +51,16 @@ export function Footer() {
             <div className="space-y-4">
               <h3 className="text-sm font-semibold text-primary">[Connect]</h3>
               <div className="flex flex-wrap gap-3">
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors border border-primary/30 rounded p-2 hover:bg-primary/10" title="GitHub">
+                <a href="https://github.com/lwhcoder" className="text-muted-foreground hover:text-primary transition-colors border border-primary/30 rounded p-2 hover:bg-primary/10" title="GitHub">
                   <Github size={18} />
                 </a>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors border border-primary/30 rounded p-2 hover:bg-primary/10" title="Twitter">
+                <a href="https://x.com/@lwhhhh_" className="text-muted-foreground hover:text-primary transition-colors border border-primary/30 rounded p-2 hover:bg-primary/10" title="Twitter">
                   <Twitter size={18} />
                 </a>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors border border-primary/30 rounded p-2 hover:bg-primary/10" title="LinkedIn">
-                  <Linkedin size={18} />
+                <a href="https://discord.gg/lwhcoder" className="text-muted-foreground hover:text-primary transition-colors border border-primary/30 rounded p-2 hover:bg-primary/10" title="LinkedIn">
+                  <Disc size={18} />
                 </a>
-                <a href="mailto:contact@lwh.dev" className="text-muted-foreground hover:text-primary transition-colors border border-primary/30 rounded p-2 hover:bg-primary/10" title="Email">
+                <a href="mailto:contact@lwh.codes" className="text-muted-foreground hover:text-primary transition-colors border border-primary/30 rounded p-2 hover:bg-primary/10" title="Email">
                   <Mail size={18} />
                 </a>
               </div>

@@ -312,14 +312,12 @@ export default function About() {
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <StaggeredList staggerDelay={100} className="contents">
-                  {interests.map((interest, index) => (
-                    <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
-                      <h3 className="font-semibold mb-2">{interest.name}</h3>
-                      <p className="text-sm text-muted-foreground">{interest.description}</p>
-                    </Card>
-                  ))}
-                </StaggeredList>
+              {interests.map((interest, index) => (
+                      <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
+                        <h3 className="font-semibold mb-2">{interest.name}</h3>
+                        <p className="text-sm text-muted-foreground">{interest.description}</p>
+                      </Card>
+                    ))}
               </div>
             </div>
           </section>

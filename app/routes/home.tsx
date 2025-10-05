@@ -95,22 +95,6 @@ export default function Home() {
                     </a>
                   </Button>
                 </div>
-
-                {/* Stats/Quick Info */}
-                <div className="grid grid-cols-3 gap-8 max-w-md mx-auto pt-8">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">7+</div>
-                    <div className="text-sm text-muted-foreground">Projects</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">3+</div>
-                    <div className="text-sm text-muted-foreground">Years Experience</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">∞</div>
-                    <div className="text-sm text-muted-foreground">Coffee Cups</div>
-                  </div>
-                </div>
               </div>
             </div>
           </section>
@@ -306,7 +290,7 @@ export default function Home() {
                       <div className="ml-4 text-white">
                         <div>name: <span className="text-green-600">'lwh'</span>,</div>
                         <div>role: <span className="text-green-600">'Full Stack Developer'</span>,</div>
-                        <div>passions: <span className="text-blue-600">['coding', 'learning', 'coffee']</span>,</div>
+                        <div>passions: <span className="text-blue-600">['coding', 'learning']</span>,</div>
                         <div>currentlyBuilding: <span className="text-green-600">'amazing things'</span></div>
                       </div>
                       <div>&#125;;</div>
