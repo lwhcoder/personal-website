@@ -13,4 +13,5 @@ export default [
   route("/color-generator", "routes/color-generator.tsx"),
   route("/github-stats", "routes/github-stats.tsx"),
   route("/dashboard", "routes/dashboard.tsx"),
+  route("/newsletter", "routes/newsletter.tsx"),
 ] satisfies RouteConfig;
