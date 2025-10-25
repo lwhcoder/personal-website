@@ -1,0 +1,63 @@
+---
+title: "Modern CSS Techniques for 2024"
+description: "Exploring the latest CSS features including container queries, cascade layers, and more"
+date: "2024-08-10"
+tags: ["CSS", "Web Development", "Frontend"]
+cover: "/blog/modern-css.jpg"
+author: "lwh"
+published: true
+---
+
+# Modern CSS Techniques for 2024
+
+CSS has evolved dramatically. Here are the techniques you should know.
+
+## Container Queries
+
+Finally, we can style elements based on their container size:
+
+```css
+.card-container {
+  container-type: inline-size;
+}
+
+@container (min-width: 400px) {
+  .card {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+  }
+}
+```
+
+## Cascade Layers
+
+Organize your CSS with proper layering:
+
+```css
+@layer reset, base, components, utilities;
+
+@layer components {
+  .button {
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+  }
+}
+```
+
+## Has Selector
+
+Target parents based on their children:
+
+```css
+.card:has(img) {
+  display: grid;
+}
+
+form:has(:invalid) {
+  border-color: red;
+}
+```
+
+## Conclusion
+
+Modern CSS gives us superpowers. Use them wisely!

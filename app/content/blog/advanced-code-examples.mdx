@@ -1,0 +1,159 @@
+---
+title: "Advanced Code Examples"
+description: "Demonstrating multi-language code blocks with syntax highlighting and clipboard support"
+date: "2024-11-01"
+tags: ["Tutorial", "Web Development"]
+cover: "/blog/code-examples.jpg"
+author: "lwh"
+published: true
+---
+
+# Advanced Code Examples
+
+This post demonstrates the advanced code block features with syntax highlighting and multi-language support.
+
+## Single Language Code Block
+
+Here's a simple TypeScript example:
+
+```typescript
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+async function getUser(id: string): Promise<User> {
+  const response = await fetch(`/api/users/${id}`);
+  return response.json();
+}
+```
+
+## Multi-Language Code Blocks
+
+You can show the same command across different shells:
+
+<MultiLanguageCode
+  filename="install.sh"
+  tabs={[
+    {
+      label: "bash",
+      language: "bash",
+      code: `#!/bin/bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev`
+    },
+    {
+      label: "zsh",
+      language: "zsh",
+      code: `#!/bin/zsh
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev`
+    },
+    {
+      label: "fish",
+      language: "fish",
+      code: `#!/usr/bin/fish
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev`
+    }
+  ]}
+/>
+
+## Package Manager Examples
+
+Show installation commands for different package managers:
+
+<MultiLanguageCode
+  tabs={[
+    {
+      label: "npm",
+      language: "bash",
+      code: "npm install react-router"
+    },
+    {
+      label: "yarn",
+      language: "bash",
+      code: "yarn add react-router"
+    },
+    {
+      label: "pnpm",
+      language: "bash",
+      code: "pnpm add react-router"
+    },
+    {
+      label: "bun",
+      language: "bash",
+      code: "bun add react-router"
+    }
+  ]}
+/>
+
+## Python Example
+
+```python
+def fibonacci(n: int) -> int:
+    """Calculate the nth Fibonacci number."""
+    if n <= 1:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+# Generate first 10 Fibonacci numbers
+for i in range(10):
+    print(f"F({i}) = {fibonacci(i)}")
+```
+
+## JavaScript vs TypeScript
+
+<MultiLanguageCode
+  filename="example"
+  showLineNumbers
+  tabs={[
+    {
+      label: "JavaScript",
+      language: "javascript",
+      code: `function greet(name) {
+  return \`Hello, \${name}!\`;
+}
+
+const user = { name: "Alice" };
+console.log(greet(user.name));`
+    },
+    {
+      label: "TypeScript",
+      language: "typescript",
+      code: `function greet(name: string): string {
+  return \`Hello, \${name}!\`;
+}
+
+interface User {
+  name: string;
+}
+
+const user: User = { name: "Alice" };
+console.log(greet(user.name));`
+    }
+  ]}
+/>
+
+## Features
+
+All code blocks include:
+
+- ✅ Syntax highlighting
+- ✅ Copy to clipboard button
+- ✅ Line numbers (optional)
+- ✅ Filename display
+- ✅ Language indicator
+- ✅ Smooth tab switching
+
+Hover over any code block to see the copy button appear!

@@ -1,0 +1,48 @@
+---
+title: "Getting Started with React Server Components"
+description: "An in-depth look at React Server Components and how they're changing the way we build web applications"
+date: "2024-10-15"
+tags: ["React", "Next.js", "Web Development"]
+cover: "/blog/react-server-components.jpg"
+author: "lwh"
+published: true
+---
+
+# Getting Started with React Server Components
+
+React Server Components represent a paradigm shift in how we build React applications. Let's dive into what makes them special.
+
+## What are Server Components?
+
+Server Components are a new type of component that runs exclusively on the server. This means:
+
+- Zero JavaScript sent to the client
+- Direct access to backend resources
+- Improved performance and SEO
+
+## Example
+
+Here's a simple server component:
+
+```tsx
+async function BlogPost({ id }: { id: string }) {
+  const post = await db.posts.findById(id);
+  
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <p>{post.content}</p>
+    </article>
+  );
+}
+```
+
+## Benefits
+
+1. **Performance** - Less JavaScript means faster load times
+2. **Security** - Sensitive logic stays on the server
+3. **Developer Experience** - Write code more naturally
+
+## Conclusion
+
+Server Components are the future of React development. Start experimenting with them today!
