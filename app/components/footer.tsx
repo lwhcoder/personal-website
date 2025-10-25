@@ -126,9 +126,6 @@ export function Footer() {
             <a href="/newsletter" className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors">
               Newsletter
             </a>
-            <p className="leading-relaxed text-muted-foreground text-sm">
-              Get updates on new projects
-            </p>
             <form className="space-y-2" onSubmit={handleSubmit}>
               <Input
                 type="email"
