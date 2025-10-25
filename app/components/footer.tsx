@@ -186,6 +186,12 @@ export function Footer() {
 
           <div className="flex flex-col items-center gap-3 text-xs text-muted-foreground sm:flex-row sm:gap-6">
             <p>© 2025 lwh.codes</p>
+            <a
+              href="/privacy"
+              className="transition-colors hover:text-foreground"
+            >
+              Privacy Policy
+            </a>
           </div>
         </div>
       </div>

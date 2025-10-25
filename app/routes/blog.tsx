@@ -1,6 +1,9 @@
 import type { Route } from "./+types/blog";
 import { Link, useSearchParams } from "react-router";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Search } from "lucide-react";
+import { useState, useMemo } from "react";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const { getAllPosts, getAllTags, getPostsByTag, formatDate } = await import("~/lib/blog.server");
@@ -45,6 +48,19 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Blog({ loaderData }: Route.ComponentProps) {
   const { posts, tags, activeTag } = loaderData;
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter posts based on search query
+  const filteredPosts = useMemo(() => {
+    if (!searchQuery.trim()) return posts;
+    
+    const query = searchQuery.toLowerCase();
+    return posts.filter(post => 
+      post.title.toLowerCase().includes(query) ||
+      post.description.toLowerCase().includes(query) ||
+      post.tags.some(tag => tag.toLowerCase().includes(query))
+    );
+  }, [posts, searchQuery]);
 
   return (
     <main className="min-h-screen py-32">
@@ -58,6 +74,25 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
               : "Thoughts on web development, design, and technology"
             }
           </p>
+        </div>
+
+        {/* Search Bar */}
+        <div className="mb-8">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search posts..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="h-11 pl-10"
+            />
+          </div>
+          {searchQuery && (
+            <p className="mt-3 text-sm text-muted-foreground">
+              Found {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'}
+            </p>
+          )}
         </div>
 
         {/* Tags Filter */}
@@ -85,7 +120,7 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
 
         {/* Posts Grid */}
         <div className="space-y-16">
-          {posts.map((post) => (
+          {filteredPosts.map((post) => (
             <article key={post.slug} className="group border-t pt-8">
               <Link to={`/blog/${post.slug}`}>
                 <div className="grid gap-8 md:grid-cols-3">
@@ -129,9 +164,24 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
         </div>
 
         {/* Empty State */}
-        {posts.length === 0 && (
+        {filteredPosts.length === 0 && (
           <div className="py-20 text-center">
-            <p className="text-muted-foreground">No posts found.</p>
+            <p className="text-muted-foreground">
+              {searchQuery 
+                ? `No posts found matching "${searchQuery}"`
+                : "No posts found."
+              }
+            </p>
+            {searchQuery && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mt-4"
+                onClick={() => setSearchQuery("")}
+              >
+                Clear search
+              </Button>
+            )}
           </div>
         )}
       </div>

@@ -55,12 +55,16 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               </div>
 
               <div className="flex gap-4">
+                <a href="/projects">
                 <Button size="lg" variant="ghost">
                   View work
                 </Button>
+                </a>
+                <a href="/contact">
                 <Button size="lg" variant="ghost">
                   Contact
                 </Button>
+                </a>
               </div>
             </div>
 

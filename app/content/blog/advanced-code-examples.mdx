@@ -112,39 +112,6 @@ for i in range(10):
     print(f"F({i}) = {fibonacci(i)}")
 ```
 
-## JavaScript vs TypeScript
-
-<MultiLanguageCode
-  filename="example"
-  showLineNumbers
-  tabs={[
-    {
-      label: "JavaScript",
-      language: "javascript",
-      code: `function greet(name) {
-  return \`Hello, \${name}!\`;
-}
-
-const user = { name: "Alice" };
-console.log(greet(user.name));`
-    },
-    {
-      label: "TypeScript",
-      language: "typescript",
-      code: `function greet(name: string): string {
-  return \`Hello, \${name}!\`;
-}
-
-interface User {
-  name: string;
-}
-
-const user: User = { name: "Alice" };
-console.log(greet(user.name));`
-    }
-  ]}
-/>
-
 ## Features
 
 All code blocks include:
