@@ -1,0 +1,149 @@
+---
+title: "Docker Containers: From Zero to Production"
+description: "A comprehensive guide to containerizing your applications with Docker. Learn best practices for development and production environments."
+date: "2025-02-10"
+tags: ["Docker", "DevOps", "Containers"]
+cover: "https://images.unsplash.com/photo-1605745341112-85968b19335b?w=1200&h=630&fit=crop"
+author: "lwh"
+published: true
+---
+
+# Docker Containers: From Zero to Production
+
+Docker has revolutionized how we build, ship, and run applications. Let's dive into containerization and learn how to leverage Docker effectively.
+
+## What is Docker?
+
+Docker is a platform that packages applications and their dependencies into containers. These containers are:
+
+- **Lightweight**: Share the host OS kernel
+- **Portable**: Run anywhere Docker is installed
+- **Isolated**: Each container runs independently
+- **Consistent**: Same environment from dev to prod
+
+## Your First Dockerfile
+
+Here's a simple Dockerfile for a Node.js application:
+
+```dockerfile
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["node", "index.js"]
+```
+
+## Multi-Stage Builds
+
+Optimize your images with multi-stage builds:
+
+```dockerfile
+# Build stage
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# Production stage
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+EXPOSE 3000
+CMD ["node", "dist/index.js"]
+```
+
+## Docker Compose for Development
+
+Use Docker Compose to orchestrate multiple services:
+
+```yaml
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: myapp
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+```
+
+## Best Practices
+
+### 1. Use Official Base Images
+
+```dockerfile
+FROM node:20-alpine  # ✅ Official, maintained
+```
+
+### 2. Minimize Layers
+
+```dockerfile
+# ❌ Multiple layers
+RUN apt-get update
+RUN apt-get install -y curl
+RUN apt-get install -y git
+
+# ✅ Single layer
+RUN apt-get update && \
+    apt-get install -y curl git && \
+    rm -rf /var/lib/apt/lists/*
+```
+
+### 3. Use .dockerignore
+
+```text
+node_modules
+npm-debug.log
+.git
+.env
+*.md
+```
+
+### 4. Don't Run as Root
+
+```dockerfile
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodejs -u 1001
+USER nodejs
+```
+
+## Production Considerations
+
+1. **Health Checks**: Add health checks to your containers
+2. **Logging**: Use proper logging drivers
+3. **Security Scanning**: Scan images for vulnerabilities
+4. **Resource Limits**: Set CPU and memory limits
+5. **Monitoring**: Track container metrics
+
+## Conclusion
+
+Docker is an essential tool for modern development. By following these practices, you'll create efficient, secure, and maintainable containerized applications.
+
+Start containerizing today!

@@ -128,9 +128,11 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
                   {post.cover && (
                     <div className="md:col-span-1">
                       <div className="aspect-video overflow-hidden rounded-lg border bg-muted transition-all group-hover:border-foreground/20">
-                        <div className="flex h-full items-center justify-center text-muted-foreground">
-                          Cover Image
-                        </div>
+                        <img 
+                          src={post.cover} 
+                          alt={post.title}
+                          className="h-full w-full object-cover"
+                        />
                       </div>
                     </div>
                   )}

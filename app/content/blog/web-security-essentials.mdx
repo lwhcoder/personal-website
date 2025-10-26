@@ -1,0 +1,316 @@
+---
+title: "Web Security Essentials: Protecting Your Applications"
+description: "Essential web security practices every developer must know. Learn about XSS, CSRF, authentication, and how to build secure web applications."
+date: "2025-06-18"
+tags: ["Security", "Web Development", "Best Practices"]
+cover: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1200&h=630&fit=crop"
+author: "lwh"
+published: true
+---
+
+# Web Security Essentials: Protecting Your Applications
+
+Security should never be an afterthought. Let's explore essential security practices that every web developer needs to know.
+
+## 1. Cross-Site Scripting (XSS)
+
+XSS allows attackers to inject malicious scripts into your web pages.
+
+### The Problem
+
+```typescript
+// ❌ VULNERABLE
+function UserGreeting({ name }: { name: string }) {
+  return <div dangerouslySetInnerHTML={{ __html: `Hello ${name}` }} />;
+}
+// If name = "<script>alert('XSS')</script>", script executes!
+```
+
+### The Solution
+
+```typescript
+// ✅ SAFE - React escapes by default
+function UserGreeting({ name }: { name: string }) {
+  return <div>Hello {name}</div>;
+}
+
+// ✅ If you must use HTML, sanitize it
+import DOMPurify from 'dompurify';
+
+function SafeHTML({ content }: { content: string }) {
+  const clean = DOMPurify.sanitize(content);
+  return <div dangerouslySetInnerHTML={{ __html: clean }} />;
+}
+```
+
+## 2. Cross-Site Request Forgery (CSRF)
+
+CSRF tricks users into performing actions they didn't intend.
+
+### Protection with CSRF Tokens
+
+```typescript
+// Server-side: Generate CSRF token
+app.get('/form', (req, res) => {
+  const csrfToken = generateCSRFToken();
+  req.session.csrfToken = csrfToken;
+  res.render('form', { csrfToken });
+});
+
+// Verify on POST
+app.post('/action', (req, res) => {
+  if (req.body.csrfToken !== req.session.csrfToken) {
+    return res.status(403).send('Invalid CSRF token');
+  }
+  // Process request
+});
+```
+
+```typescript
+// Client-side: Include token in forms
+<form method="POST" action="/action">
+  <input type="hidden" name="csrfToken" value={csrfToken} />
+  <button type="submit">Submit</button>
+</form>
+```
+
+## 3. Authentication & Authorization
+
+### Secure Password Storage
+
+```typescript
+import bcrypt from 'bcrypt';
+
+// ❌ NEVER store plain text passwords
+const password = 'user123';
+
+// ✅ Hash passwords with bcrypt
+async function hashPassword(password: string) {
+  const saltRounds = 12;
+  return await bcrypt.hash(password, saltRounds);
+}
+
+// Verify password
+async function verifyPassword(password: string, hash: string) {
+  return await bcrypt.compare(password, hash);
+}
+```
+
+### JWT Authentication
+
+```typescript
+import jwt from 'jsonwebtoken';
+
+// Generate token
+function generateToken(userId: string) {
+  return jwt.sign(
+    { userId },
+    process.env.JWT_SECRET!,
+    { expiresIn: '1h' }
+  );
+}
+
+// Verify token middleware
+function authenticateToken(req, res, next) {
+  const token = req.headers['authorization']?.split(' ')[1];
+  
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET!, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ error: 'Invalid token' });
+    }
+    req.userId = decoded.userId;
+    next();
+  });
+}
+```
+
+## 4. SQL Injection Prevention
+
+### The Problem
+
+```typescript
+// ❌ VULNERABLE to SQL injection
+const query = `SELECT * FROM users WHERE email = '${email}'`;
+// If email = "'; DROP TABLE users; --", disaster!
+```
+
+### The Solution
+
+```typescript
+// ✅ Use parameterized queries
+import { db } from './database';
+
+// With Prisma
+const user = await db.user.findUnique({
+  where: { email: email }
+});
+
+// With raw SQL - use parameters
+const user = await db.query(
+  'SELECT * FROM users WHERE email = $1',
+  [email]
+);
+```
+
+## 5. Security Headers
+
+Implement security headers:
+
+```typescript
+// Next.js middleware
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+
+  // Prevent clickjacking
+  response.headers.set('X-Frame-Options', 'DENY');
+  
+  // Enable XSS protection
+  response.headers.set('X-XSS-Protection', '1; mode=block');
+  
+  // Prevent MIME sniffing
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  
+  // Enforce HTTPS
+  response.headers.set(
+    'Strict-Transport-Security',
+    'max-age=31536000; includeSubDomains'
+  );
+  
+  // Content Security Policy
+  response.headers.set(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline';"
+  );
+
+  return response;
+}
+```
+
+## 6. HTTPS Everywhere
+
+```typescript
+// Redirect HTTP to HTTPS
+app.use((req, res, next) => {
+  if (req.protocol === 'http' && process.env.NODE_ENV === 'production') {
+    return res.redirect(301, `https://${req.headers.host}${req.url}`);
+  }
+  next();
+});
+```
+
+## 7. Rate Limiting
+
+Prevent brute force attacks:
+
+```typescript
+import rateLimit from 'express-rate-limit';
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per window
+  message: 'Too many requests, please try again later.'
+});
+
+app.use('/api/', limiter);
+
+// Stricter limit for login
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: 'Too many login attempts'
+});
+
+app.post('/api/login', loginLimiter, loginHandler);
+```
+
+## 8. Input Validation
+
+Always validate and sanitize input:
+
+```typescript
+import { z } from 'zod';
+
+// Define schema
+const userSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8).max(100),
+  age: z.number().int().min(13).max(150),
+});
+
+// Validate input
+function createUser(input: unknown) {
+  try {
+    const validated = userSchema.parse(input);
+    // Safe to use validated data
+    return createUserInDB(validated);
+  } catch (error) {
+    return { error: 'Invalid input' };
+  }
+}
+```
+
+## 9. Environment Variables
+
+Never expose secrets:
+
+```typescript
+// ❌ NEVER commit this
+const apiKey = 'sk_live_abc123xyz789';
+
+// ✅ Use environment variables
+const apiKey = process.env.API_KEY;
+
+// ✅ Validate on startup
+if (!process.env.API_KEY) {
+  throw new Error('API_KEY is required');
+}
+```
+
+```text
+# .env (add to .gitignore)
+API_KEY=your_secret_key
+DATABASE_URL=postgresql://...
+JWT_SECRET=random_secret_string
+```
+
+## 10. Dependency Security
+
+Keep dependencies updated and check for vulnerabilities:
+
+```bash
+# Check for vulnerabilities
+npm audit
+
+# Fix vulnerabilities
+npm audit fix
+
+# Use tools like Snyk
+npx snyk test
+```
+
+## Security Checklist
+
+- [ ] Sanitize all user input
+- [ ] Use HTTPS everywhere
+- [ ] Implement CSRF protection
+- [ ] Hash passwords with bcrypt
+- [ ] Use parameterized queries
+- [ ] Set security headers
+- [ ] Implement rate limiting
+- [ ] Validate environment variables
+- [ ] Keep dependencies updated
+- [ ] Regular security audits
+- [ ] Use Content Security Policy
+- [ ] Implement proper authentication
+- [ ] Log security events
+- [ ] Use secure session management
+
+## Conclusion
+
+Security is an ongoing process, not a one-time task. Stay updated on security best practices, audit your code regularly, and always think like an attacker.
+
+Remember: **Security is everyone's responsibility!** 🔒

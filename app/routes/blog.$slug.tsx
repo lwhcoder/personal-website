@@ -32,7 +32,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   const { getPostBySlug, formatDate } = await import("~/lib/blog.server");
   const post = getPostBySlug(params.slug);
   
-  if (!post) {
+  if (!post || post.published === false) {
     throw new Response("Not Found", { status: 404 });
   }
 
@@ -171,9 +171,11 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
         {post.cover && (
           <div className="mb-12">
             <div className="aspect-video overflow-hidden rounded-lg border bg-muted">
-              <div className="flex h-full items-center justify-center text-muted-foreground">
-                Cover Image
-              </div>
+              <img 
+                src={post.cover} 
+                alt={post.title}
+                className="h-full w-full object-cover"
+              />
             </div>
           </div>
         )}

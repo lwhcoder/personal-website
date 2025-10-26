@@ -1,0 +1,295 @@
+---
+title: "Git Workflow Guide: Mastering Version Control"
+description: "Master Git workflows for solo and team development. Learn branching strategies, commit conventions, and collaboration best practices."
+date: "2025-04-12"
+tags: ["Git", "DevOps", "Best Practices"]
+cover: "https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=1200&h=630&fit=crop"
+author: "lwh"
+published: true
+---
+
+# Git Workflow Guide: Mastering Version Control
+
+Git is essential for modern development. Let's explore workflows and practices that will make you a Git expert.
+
+## Git Flow: The Classic Workflow
+
+Git Flow uses multiple branches for different purposes:
+
+```bash
+# Main branches
+main        # Production-ready code
+develop     # Integration branch
+
+# Supporting branches
+feature/*   # New features
+release/*   # Release preparation
+hotfix/*    # Production fixes
+```
+
+### Creating a Feature
+
+```bash
+# Create feature branch from develop
+git checkout develop
+git checkout -b feature/user-authentication
+
+# Work on feature
+git add .
+git commit -m "feat: add user login"
+
+# Merge back to develop
+git checkout develop
+git merge feature/user-authentication
+git branch -d feature/user-authentication
+```
+
+## GitHub Flow: Simplified Workflow
+
+A simpler approach for continuous deployment:
+
+```bash
+# 1. Create branch from main
+git checkout -b add-search-feature
+
+# 2. Make commits
+git add .
+git commit -m "Add search functionality"
+
+# 3. Push and create PR
+git push origin add-search-feature
+
+# 4. Review, test, merge to main
+# 5. Deploy from main
+```
+
+## Trunk-Based Development
+
+For fast-moving teams:
+
+```bash
+# Short-lived branches off main
+git checkout -b fix-typo
+# Quick fix
+git commit -m "fix: correct typo in header"
+git push origin fix-typo
+# Immediate PR and merge
+```
+
+## Commit Message Conventions
+
+Use conventional commits for clarity:
+
+```bash
+# Format: <type>(<scope>): <subject>
+
+feat: add user profile page
+fix: resolve login redirect issue
+docs: update API documentation
+style: format code with prettier
+refactor: simplify auth logic
+test: add unit tests for parser
+chore: update dependencies
+```
+
+### Real Examples
+
+```bash
+feat(auth): implement JWT authentication
+fix(api): handle null user case
+docs(readme): add installation steps
+perf(db): optimize query performance
+```
+
+## Useful Git Commands
+
+### Interactive Rebase
+
+Clean up commit history:
+
+```bash
+# Rebase last 3 commits
+git rebase -i HEAD~3
+
+# Options:
+# pick   - keep commit
+# reword - change message
+# squash - combine with previous
+# drop   - remove commit
+```
+
+### Cherry-Pick
+
+Apply specific commits:
+
+```bash
+# Apply commit from another branch
+git cherry-pick abc1234
+```
+
+### Stash Changes
+
+Temporarily save work:
+
+```bash
+# Save changes
+git stash save "WIP: user dashboard"
+
+# List stashes
+git stash list
+
+# Apply and keep stash
+git stash apply stash@{0}
+
+# Apply and remove stash
+git stash pop
+```
+
+### Reset and Revert
+
+```bash
+# Undo last commit, keep changes
+git reset --soft HEAD~1
+
+# Undo last commit, discard changes
+git reset --hard HEAD~1
+
+# Create new commit that undoes changes
+git revert abc1234
+```
+
+## Branch Management
+
+### Cleaning Up
+
+```bash
+# Delete local branch
+git branch -d feature/old-feature
+
+# Delete remote branch
+git push origin --delete feature/old-feature
+
+# Prune deleted remote branches
+git fetch --prune
+```
+
+### Viewing Branches
+
+```bash
+# All branches
+git branch -a
+
+# Branches with last commit
+git branch -v
+
+# Merged branches
+git branch --merged
+```
+
+## Working with Remotes
+
+```bash
+# Add remote
+git remote add upstream https://github.com/original/repo.git
+
+# Fetch from upstream
+git fetch upstream
+
+# Sync with upstream
+git checkout main
+git merge upstream/main
+git push origin main
+```
+
+## .gitignore Best Practices
+
+```text
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+dist/
+build/
+*.min.js
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+```
+
+## Git Hooks
+
+Automate checks with hooks:
+
+```bash
+#!/bin/sh
+# .git/hooks/pre-commit
+
+# Run tests
+npm test
+
+# Run linter
+npm run lint
+
+# Check commit message format
+# ... validation logic ...
+```
+
+## Resolving Merge Conflicts
+
+```bash
+# When conflict occurs
+git status  # See conflicted files
+
+# Edit files to resolve conflicts
+# Look for <<<<<<< HEAD markers
+
+# After resolving
+git add .
+git commit -m "fix: resolve merge conflicts"
+```
+
+## Git Aliases
+
+Speed up your workflow:
+
+```bash
+# Add to ~/.gitconfig
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    ci = commit
+    unstage = reset HEAD --
+    last = log -1 HEAD
+    visual = log --graph --oneline --all
+```
+
+## Best Practices
+
+1. **Commit Often**: Small, focused commits
+2. **Write Clear Messages**: Follow conventions
+3. **Pull Before Push**: Stay in sync
+4. **Review Before Commit**: Check `git diff`
+5. **Use Branches**: Never commit directly to main
+6. **Keep History Clean**: Use rebase when appropriate
+
+## Conclusion
+
+Mastering Git takes practice, but these workflows and commands will make you more efficient and confident in managing your code.
+
+Happy versioning! 🚀

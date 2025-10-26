@@ -1,0 +1,356 @@
+---
+title: "Next.js App Router: The Complete Guide"
+description: "Explore Next.js App Router with server components, streaming, and data fetching. Build modern web applications with the latest Next.js features."
+date: "2025-05-20"
+tags: ["Next.js", "React", "Web Development"]
+cover: "https://images.unsplash.com/photo-1618477388954-7852f32655ec?w=1200&h=630&fit=crop"
+author: "lwh"
+published: true
+---
+
+# Next.js App Router: The Complete Guide
+
+Next.js 13+ introduced the App Router, revolutionizing how we build React applications. Let's explore its powerful features.
+
+## File-Based Routing
+
+The App Router uses a file-system based router:
+
+```text
+app/
+├── page.tsx              # /
+├── about/
+│   └── page.tsx         # /about
+├── blog/
+│   ├── page.tsx         # /blog
+│   └── [slug]/
+│       └── page.tsx     # /blog/[slug]
+└── api/
+    └── users/
+        └── route.ts     # /api/users
+```
+
+## Server Components by Default
+
+Components are Server Components by default:
+
+```typescript
+// app/page.tsx - Server Component
+async function HomePage() {
+  // Fetch data directly in component
+  const data = await fetch('https://api.example.com/data');
+  const posts = await data.json();
+
+  return (
+    <div>
+      <h1>Posts</h1>
+      {posts.map(post => (
+        <Post key={post.id} {...post} />
+      ))}
+    </div>
+  );
+}
+
+export default HomePage;
+```
+
+## Client Components
+
+Use 'use client' for interactivity:
+
+```typescript
+'use client';
+
+import { useState } from 'react';
+
+export function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Count: {count}
+    </button>
+  );
+}
+```
+
+## Layouts and Templates
+
+### Root Layout
+
+```typescript
+// app/layout.tsx
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <nav>Navigation</nav>
+        {children}
+        <footer>Footer</footer>
+      </body>
+    </html>
+  );
+}
+```
+
+### Nested Layouts
+
+```typescript
+// app/blog/layout.tsx
+export default function BlogLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <aside>Blog Sidebar</aside>
+      <main>{children}</main>
+    </div>
+  );
+}
+```
+
+## Data Fetching
+
+### Server-Side Fetching
+
+```typescript
+// Cached by default
+async function getData() {
+  const res = await fetch('https://api.example.com/data');
+  return res.json();
+}
+
+// Revalidate every 60 seconds
+async function getDataRevalidate() {
+  const res = await fetch('https://api.example.com/data', {
+    next: { revalidate: 60 }
+  });
+  return res.json();
+}
+
+// Never cache
+async function getDataNoCache() {
+  const res = await fetch('https://api.example.com/data', {
+    cache: 'no-store'
+  });
+  return res.json();
+}
+```
+
+### Parallel Data Fetching
+
+```typescript
+async function Page() {
+  // Fetch in parallel
+  const [users, posts] = await Promise.all([
+    fetchUsers(),
+    fetchPosts(),
+  ]);
+
+  return (
+    <div>
+      <Users data={users} />
+      <Posts data={posts} />
+    </div>
+  );
+}
+```
+
+## Loading and Error States
+
+### Loading UI
+
+```typescript
+// app/blog/loading.tsx
+export default function Loading() {
+  return <div>Loading blog posts...</div>;
+}
+```
+
+### Error Handling
+
+```typescript
+// app/blog/error.tsx
+'use client';
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error;
+  reset: () => void;
+}) {
+  return (
+    <div>
+      <h2>Something went wrong!</h2>
+      <button onClick={() => reset()}>Try again</button>
+    </div>
+  );
+}
+```
+
+## Dynamic Routes
+
+```typescript
+// app/blog/[slug]/page.tsx
+interface PageProps {
+  params: { slug: string };
+}
+
+export default async function BlogPost({ params }: PageProps) {
+  const post = await fetchPost(params.slug);
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <div>{post.content}</div>
+    </article>
+  );
+}
+
+// Generate static params at build time
+export async function generateStaticParams() {
+  const posts = await fetchAllPosts();
+
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+```
+
+## Metadata API
+
+```typescript
+// Static metadata
+export const metadata = {
+  title: 'My Blog',
+  description: 'Welcome to my blog',
+};
+
+// Dynamic metadata
+export async function generateMetadata({ params }) {
+  const post = await fetchPost(params.slug);
+
+  return {
+    title: post.title,
+    description: post.description,
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      images: [post.image],
+    },
+  };
+}
+```
+
+## Route Handlers (API Routes)
+
+```typescript
+// app/api/posts/route.ts
+import { NextResponse } from 'next/server';
+
+export async function GET(request: Request) {
+  const posts = await fetchPosts();
+  return NextResponse.json(posts);
+}
+
+export async function POST(request: Request) {
+  const body = await request.json();
+  const post = await createPost(body);
+  return NextResponse.json(post, { status: 201 });
+}
+```
+
+## Streaming and Suspense
+
+```typescript
+import { Suspense } from 'react';
+
+async function SlowComponent() {
+  await new Promise(resolve => setTimeout(resolve, 3000));
+  return <div>Loaded!</div>;
+}
+
+export default function Page() {
+  return (
+    <div>
+      <h1>Fast content</h1>
+      <Suspense fallback={<div>Loading slow content...</div>}>
+        <SlowComponent />
+      </Suspense>
+    </div>
+  );
+}
+```
+
+## Server Actions
+
+```typescript
+// app/actions.ts
+'use server';
+
+export async function createPost(formData: FormData) {
+  const title = formData.get('title');
+  const content = formData.get('content');
+
+  await db.post.create({
+    data: { title, content },
+  });
+
+  revalidatePath('/blog');
+}
+```
+
+```typescript
+// app/blog/new/page.tsx
+import { createPost } from '@/app/actions';
+
+export default function NewPost() {
+  return (
+    <form action={createPost}>
+      <input name="title" required />
+      <textarea name="content" required />
+      <button type="submit">Create Post</button>
+    </form>
+  );
+}
+```
+
+## Route Groups
+
+Organize without affecting URLs:
+
+```text
+app/
+├── (marketing)/
+│   ├── about/
+│   └── contact/
+└── (shop)/
+    ├── products/
+    └── cart/
+```
+
+## Parallel Routes
+
+Show multiple pages simultaneously:
+
+```text
+app/
+├── @modal/
+│   └── page.tsx
+├── @sidebar/
+│   └── page.tsx
+└── layout.tsx
+```
+
+## Conclusion
+
+The Next.js App Router brings powerful features like Server Components, Streaming, and improved data fetching. It's the future of React development.
+
+Start building with the App Router today! 🚀

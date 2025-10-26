@@ -104,6 +104,14 @@ export function Footer() {
               </li>
               <li>
                 <a
+                  href="/editions"
+                  className="text-sm text-foreground/60 transition-colors hover:text-foreground"
+                >
+                  Editions
+                </a>
+              </li>
+              <li>
+                <a
                   href="/changelog"
                   className="text-sm text-foreground/60 transition-colors hover:text-foreground"
                 >

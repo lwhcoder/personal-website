@@ -1,0 +1,220 @@
+---
+title: "React Performance Optimization Techniques"
+description: "Deep dive into React performance optimization. Learn memoization, lazy loading, code splitting, and more to build lightning-fast React apps."
+date: "2025-03-05"
+tags: ["React", "Performance", "JavaScript"]
+cover: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1200&h=630&fit=crop"
+author: "lwh"
+published: true
+---
+
+# React Performance Optimization Techniques
+
+React is fast, but poorly optimized React apps can be slow. Let's explore techniques to keep your React applications performant.
+
+## 1. Use React.memo for Component Memoization
+
+Prevent unnecessary re-renders with `React.memo`:
+
+```typescript
+import { memo } from 'react';
+
+interface UserCardProps {
+  name: string;
+  email: string;
+}
+
+const UserCard = memo(({ name, email }: UserCardProps) => {
+  console.log('Rendering UserCard');
+  return (
+    <div>
+      <h3>{name}</h3>
+      <p>{email}</p>
+    </div>
+  );
+});
+```
+
+## 2. useMemo for Expensive Calculations
+
+Cache expensive computation results:
+
+```typescript
+import { useMemo } from 'react';
+
+function DataTable({ data }: { data: Item[] }) {
+  const sortedData = useMemo(() => {
+    return [...data].sort((a, b) => a.value - b.value);
+  }, [data]);
+
+  return (
+    <table>
+      {sortedData.map(item => (
+        <tr key={item.id}>
+          <td>{item.name}</td>
+        </tr>
+      ))}
+    </table>
+  );
+}
+```
+
+## 3. useCallback for Function Memoization
+
+Prevent function recreation on every render:
+
+```typescript
+import { useCallback, useState } from 'react';
+
+function TodoList() {
+  const [todos, setTodos] = useState<string[]>([]);
+
+  const addTodo = useCallback((text: string) => {
+    setTodos(prev => [...prev, text]);
+  }, []);
+
+  return <TodoInput onAdd={addTodo} />;
+}
+```
+
+## 4. Code Splitting with React.lazy
+
+Load components only when needed:
+
+```typescript
+import { lazy, Suspense } from 'react';
+
+const HeavyComponent = lazy(() => import('./HeavyComponent'));
+
+function App() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HeavyComponent />
+    </Suspense>
+  );
+}
+```
+
+## 5. Virtual Scrolling for Long Lists
+
+Use libraries like `react-window` for long lists:
+
+```typescript
+import { FixedSizeList } from 'react-window';
+
+function VirtualList({ items }: { items: string[] }) {
+  return (
+    <FixedSizeList
+      height={600}
+      itemCount={items.length}
+      itemSize={50}
+      width="100%"
+    >
+      {({ index, style }) => (
+        <div style={style}>
+          {items[index]}
+        </div>
+      )}
+    </FixedSizeList>
+  );
+}
+```
+
+## 6. Avoid Inline Functions and Objects
+
+Inline definitions create new references:
+
+```typescript
+// ❌ Avoid
+<Button onClick={() => handleClick(id)} />
+<Component style={{ margin: 10 }} />
+
+// ✅ Better
+const handleButtonClick = useCallback(() => handleClick(id), [id]);
+const buttonStyle = useMemo(() => ({ margin: 10 }), []);
+
+<Button onClick={handleButtonClick} />
+<Component style={buttonStyle} />
+```
+
+## 7. Use the Production Build
+
+Always use production builds in production:
+
+```bash
+npm run build
+```
+
+Production builds:
+- Remove development warnings
+- Minify code
+- Enable optimizations
+- Use smaller bundle sizes
+
+## 8. Profiling with React DevTools
+
+Use React DevTools Profiler to identify bottlenecks:
+
+1. Open React DevTools
+2. Go to Profiler tab
+3. Click record
+4. Interact with your app
+5. Stop recording and analyze
+
+## 9. Optimize Images
+
+```typescript
+// Use modern formats
+<img src="image.webp" alt="Optimized" />
+
+// Lazy load images
+<img loading="lazy" src="image.jpg" alt="Lazy loaded" />
+
+// Responsive images
+<img 
+  srcSet="small.jpg 400w, medium.jpg 800w, large.jpg 1200w"
+  sizes="(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px"
+  src="medium.jpg"
+  alt="Responsive"
+/>
+```
+
+## 10. Use Web Workers for Heavy Tasks
+
+Offload heavy computations:
+
+```typescript
+const worker = new Worker(new URL('./worker.ts', import.meta.url));
+
+worker.postMessage({ data: heavyData });
+
+worker.onmessage = (e) => {
+  setResult(e.data);
+};
+```
+
+## Measuring Performance
+
+Always measure before optimizing:
+
+```typescript
+import { Profiler } from 'react';
+
+function onRenderCallback(
+  id: string,
+  phase: 'mount' | 'update',
+  actualDuration: number
+) {
+  console.log(`${id} took ${actualDuration}ms`);
+}
+
+<Profiler id="MyComponent" onRender={onRenderCallback}>
+  <MyComponent />
+</Profiler>
+```
+
+## Conclusion
+
+Performance optimization is about finding the right balance. Don't optimize prematurely, but know these techniques when you need them.
+
+Remember: **Measure, optimize, measure again!**

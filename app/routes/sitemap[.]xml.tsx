@@ -14,6 +14,9 @@ export async function loader() {
     { url: "/blog", priority: "0.9", changefreq: "daily", lastmod: currentDate },
     { url: "/contact", priority: "0.7", changefreq: "monthly", lastmod: currentDate },
     { url: "/newsletter", priority: "0.7", changefreq: "monthly", lastmod: currentDate },
+    { url: "/editions", priority: "0.7", changefreq: "weekly", lastmod: currentDate },
+    { url: "/changelog", priority: "0.6", changefreq: "monthly", lastmod: currentDate },
+    { url: "/privacy", priority: "0.5", changefreq: "yearly", lastmod: currentDate },
   ];
   
   const blogPosts = posts.map(post => ({
