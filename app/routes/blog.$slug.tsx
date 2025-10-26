@@ -160,8 +160,8 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
 
           <div className="mt-6 flex flex-wrap gap-2">
             {post.tags.map((tag: string) => (
-              <a href={`/blog?tag=${tag}`}>
-              <Badge key={tag} className="text-sm" variant={"outline"}>{tag}</Badge>
+              <a href={`/blog?tag=${tag}`} className="text-sm hover:underline" key={tag}>
+              {tag}
               </a>
             ))}
           </div>

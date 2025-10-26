@@ -33,12 +33,16 @@ export default function About() {
               Full stack developer crafting digital experiences
             </p>
             <div className="flex gap-4">
+              <a href="/contact">
               <Button size="lg" variant="ghost" className="text-base">
                 Contact
               </Button>
+              </a>
+              <a href="/projects">
               <Button size="lg" variant="ghost" className="text-base">
                 Work
               </Button>
+              </a>
             </div>
           </div>
         </div>

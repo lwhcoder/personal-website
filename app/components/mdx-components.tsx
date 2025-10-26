@@ -90,24 +90,21 @@ export const mdxComponents = {
     // Extract code content and language from children
     const childArray = Array.isArray(children) ? children : [children];
     const codeElement = childArray.find(
-      (child: any) => child?.type === "code"
+      (child: any) => child?.type === "code" || child?.props?.className
     );
 
-    if (codeElement && codeElement.props) {
-      const language = extractLanguageFromClassName(codeElement.props.className);
-      const code = String(codeElement.props.children || "").trim();
+    if (codeElement) {
+      const codeProps = codeElement.props || {};
+      const language = extractLanguageFromClassName(codeProps.className);
+      const code = String(codeProps.children || children || "").trim();
       
-      return <CodeBlock code={code} language={language} showLineNumbers />;
+      // Always use CodeBlock component for consistent styling and copy functionality
+      return <CodeBlock code={code} language={language} />;
     }
 
-    return (
-      <pre
-        className="mb-6 overflow-x-auto rounded-lg border bg-muted p-4 font-mono text-sm"
-        {...props}
-      >
-        {children}
-      </pre>
-    );
+    // Fallback for edge cases
+    const code = String(children || "").trim();
+    return <CodeBlock code={code} language="text" />;
   },
   img: ({ src, alt, ...props }: MDXComponentProps) => (
     <img

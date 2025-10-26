@@ -81,8 +81,10 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
+  let is404 = false;
 
   if (isRouteErrorResponse(error)) {
+    is404 = error.status === 404;
     message = error.status === 404 ? "404" : "Error";
     details =
       error.status === 404
@@ -93,6 +95,69 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     stack = error.stack;
   }
 
+  // Custom 404 page
+  if (is404) {
+    return (
+      <main className="flex min-h-screen items-center justify-center">
+        <div className="container mx-auto max-w-2xl px-6 text-center">
+          <div className="space-y-8">
+            {/* 404 Number */}
+            <div>
+              <h1 className="text-9xl font-bold tracking-tighter sm:text-[12rem]">
+                404
+              </h1>
+            </div>
+
+            {/* Message */}
+            <div className="space-y-4">
+              <h2 className="text-3xl font-medium sm:text-4xl">
+                Page not found
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                The page you're looking for doesn't exist or has been moved.
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <a
+                href="/"
+                className="inline-flex items-center justify-center rounded-md px-6 py-3 text-sm transition-colors hover:bg-muted"
+              >
+                Go home
+              </a>
+              <a
+                href="/blog"
+                className="inline-flex items-center justify-center rounded-md px-6 py-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                View blog
+              </a>
+            </div>
+
+            {/* Additional Links */}
+            <div className="border-t pt-8">
+              <p className="mb-4 text-sm text-muted-foreground">
+                Looking for something specific?
+              </p>
+              <div className="flex flex-wrap justify-center gap-4 text-sm">
+                <a href="/about" className="text-muted-foreground hover:text-foreground">
+                  About
+                </a>
+                <a href="/projects" className="text-muted-foreground hover:text-foreground">
+                  Projects
+                </a>
+                <a href="/contact" className="text-muted-foreground hover:text-foreground">
+                  Contact
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Generic error page for non-404 errors
   return (
     <main className="pt-16 p-4 container mx-auto">
       <h1>{message}</h1>

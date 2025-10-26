@@ -51,12 +51,20 @@ export function CodeBlock({
       {/* Header */}
       <div className="flex items-center justify-between border-b bg-muted/50 px-4 py-2">
         <div className="flex items-center gap-2">
-          {filename && (
-            <span className="text-sm font-mono text-muted-foreground">
-              {filename}
-            </span>
+          {filename ? (
+            <>
+              <span className="text-sm font-mono text-muted-foreground">
+                {filename}
+              </span>
+              {language !== "text" && (
+                <span className="text-xs text-muted-foreground">{language}</span>
+              )}
+            </>
+          ) : (
+            language !== "text" && (
+              <span className="text-xs text-muted-foreground">{language}</span>
+            )
           )}
-          <span className="text-xs text-muted-foreground">{language}</span>
         </div>
         
         <Button

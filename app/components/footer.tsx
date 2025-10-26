@@ -37,7 +37,7 @@ export function Footer() {
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand Section */}
           <div className="space-y-3">
-            <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">~/lwh</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">lwh</p>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Full-stack developer crafting modern web experiences
             </p>
@@ -112,10 +112,10 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="/quotes"
+                  href="https://bio.lwh.codes"
                   className="text-sm text-foreground/60 transition-colors hover:text-foreground"
                 >
-                  Quotes
+                  Links
                 </a>
               </li>
             </ul>
@@ -123,9 +123,7 @@ export function Footer() {
 
           {/* Newsletter */}
           <div className="space-y-3">
-            <a href="/newsletter" className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors">
-              Newsletter
-            </a>
+            <h3 className="text-xs uppercase tracking-wider text-muted-foreground">Newsletter</h3>
             <form className="space-y-2" onSubmit={handleSubmit}>
               <Input
                 type="email"

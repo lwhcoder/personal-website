@@ -92,7 +92,7 @@ export default function Contact() {
                   name="message"
                   placeholder="Your message..."
                   required
-                  rows={8}
+                  rows={12}
                   className="resize-none"
                 />
               </div>
