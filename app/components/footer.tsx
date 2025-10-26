@@ -79,13 +79,6 @@ export function Footer() {
                   Blog
                 </a>
               </li>
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div className="space-y-3">
-            <h3 className="text-xs uppercase tracking-wider text-muted-foreground">Resources</h3>
-            <ul className="space-y-2">
               <li>
                 <a
                   href="/contact"
@@ -94,6 +87,13 @@ export function Footer() {
                   Contact
                 </a>
               </li>
+            </ul>
+          </div>
+
+          {/* Resources */}
+          <div className="space-y-3">
+            <h3 className="text-xs uppercase tracking-wider text-muted-foreground">Resources</h3>
+            <ul className="space-y-2">
               <li>
                 <a
                   href="/newsletter"
