@@ -1,0 +1,524 @@
+---
+number: 3
+title: "Next.js App Router: Migration Guide"
+description: "Step-by-step guide to migrating from Pages Router to App Router with real examples."
+date: "2025-05-18"
+slug: "nextjs-migration"
+readingTime: "10 min"
+topics: ["Next.js", "React", "Migration"]
+published: true
+---
+
+# Next.js App Router: Migration Guide
+
+Edition #3! Today we're tackling the migration from Next.js Pages Router to the new App Router.
+
+## Why Migrate?
+
+### App Router Benefits
+
+- **Server Components** by default
+- **Streaming** and Suspense support
+- **Layouts** for shared UI
+- **Better data fetching** with async/await
+- **Improved TypeScript** support
+
+## File Structure Changes
+
+### Before (Pages Router)
+
+```
+pages/
+  _app.js
+  _document.js
+  index.js
+  about.js
+  blog/
+    [slug].js
+```
+
+### After (App Router)
+
+```
+app/
+  layout.js
+  page.js
+  about/
+    page.js
+  blog/
+    [slug]/
+      page.js
+```
+
+## Basic Migration Steps
+
+### 1. Move Root Layout
+
+**Before:**
+```jsx
+// pages/_app.js
+export default function App({ Component, pageProps }) {
+  return <Component {...pageProps} />;
+}
+```
+
+**After:**
+```jsx
+// app/layout.js
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+### 2. Convert Pages
+
+**Before:**
+```jsx
+// pages/index.js
+export default function Home() {
+  return <h1>Welcome</h1>;
+}
+```
+
+**After:**
+```jsx
+// app/page.js
+export default function Home() {
+  return <h1>Welcome</h1>;
+}
+```
+
+### 3. Dynamic Routes
+
+**Before:**
+```jsx
+// pages/blog/[slug].js
+export default function Post({ post }) {
+  return <article>{post.title}</article>;
+}
+
+export async function getStaticProps({ params }) {
+  const post = await getPost(params.slug);
+  return { props: { post } };
+}
+```
+
+**After:**
+```jsx
+// app/blog/[slug]/page.js
+export default async function Post({ params }) {
+  const post = await getPost(params.slug);
+  return <article>{post.title}</article>;
+}
+
+export async function generateStaticParams() {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+```
+
+## Data Fetching
+
+### Server Components (Default)
+
+```jsx
+// app/posts/page.js
+async function getPosts() {
+  const res = await fetch('https://api.example.com/posts', {
+    next: { revalidate: 60 } // Revalidate every 60 seconds
+  });
+  return res.json();
+}
+
+export default async function Posts() {
+  const posts = await getPosts();
+  
+  return (
+    <ul>
+      {posts.map(post => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+### Client Components
+
+```jsx
+'use client';
+
+import { useState, useEffect } from 'react';
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+  
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Count: {count}
+    </button>
+  );
+}
+```
+
+## Layouts and Templates
+
+### Nested Layouts
+
+```jsx
+// app/layout.js
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        <Header />
+        {children}
+        <Footer />
+      </body>
+    </html>
+  );
+}
+
+// app/blog/layout.js
+export default function BlogLayout({ children }) {
+  return (
+    <div className="blog-container">
+      <Sidebar />
+      <main>{children}</main>
+    </div>
+  );
+}
+```
+
+### Templates
+
+Templates re-render on navigation (unlike layouts):
+
+```jsx
+// app/template.js
+export default function Template({ children }) {
+  return <div className="fade-in">{children}</div>;
+}
+```
+
+## Loading States
+
+```jsx
+// app/posts/loading.js
+export default function Loading() {
+  return <div>Loading posts...</div>;
+}
+
+// app/posts/page.js
+export default async function Posts() {
+  const posts = await getPosts(); // Suspense boundary triggers loading.js
+  return <PostList posts={posts} />;
+}
+```
+
+## Error Handling
+
+```jsx
+// app/error.js
+'use client';
+
+export default function Error({ error, reset }) {
+  return (
+    <div>
+      <h2>Something went wrong!</h2>
+      <p>{error.message}</p>
+      <button onClick={reset}>Try again</button>
+    </div>
+  );
+}
+```
+
+## Metadata
+
+**Before:**
+```jsx
+// pages/about.js
+import Head from 'next/head';
+
+export default function About() {
+  return (
+    <>
+      <Head>
+        <title>About Us</title>
+        <meta name="description" content="Learn about us" />
+      </Head>
+      <h1>About</h1>
+    </>
+  );
+}
+```
+
+**After:**
+```jsx
+// app/about/page.js
+export const metadata = {
+  title: 'About Us',
+  description: 'Learn about us',
+};
+
+export default function About() {
+  return <h1>About</h1>;
+}
+```
+
+### Dynamic Metadata
+
+```jsx
+export async function generateMetadata({ params }) {
+  const post = await getPost(params.slug);
+  
+  return {
+    title: post.title,
+    description: post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      images: [post.coverImage],
+    },
+  };
+}
+```
+
+## Route Handlers (API Routes)
+
+**Before:**
+```jsx
+// pages/api/users.js
+export default async function handler(req, res) {
+  const users = await getUsers();
+  res.status(200).json(users);
+}
+```
+
+**After:**
+```jsx
+// app/api/users/route.js
+export async function GET(request) {
+  const users = await getUsers();
+  return Response.json(users);
+}
+
+export async function POST(request) {
+  const body = await request.json();
+  const user = await createUser(body);
+  return Response.json(user, { status: 201 });
+}
+```
+
+## Middleware
+
+```jsx
+// middleware.js
+import { NextResponse } from 'next/server';
+
+export function middleware(request) {
+  // Check authentication
+  const token = request.cookies.get('token');
+  
+  if (!token && request.nextUrl.pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+  
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: '/dashboard/:path*',
+};
+```
+
+## Streaming and Suspense
+
+```jsx
+import { Suspense } from 'react';
+
+async function Posts() {
+  const posts = await getPosts();
+  return <PostList posts={posts} />;
+}
+
+async function Comments() {
+  const comments = await getComments();
+  return <CommentList comments={comments} />;
+}
+
+export default function Page() {
+  return (
+    <>
+      <h1>Blog</h1>
+      <Suspense fallback={<div>Loading posts...</div>}>
+        <Posts />
+      </Suspense>
+      <Suspense fallback={<div>Loading comments...</div>}>
+        <Comments />
+      </Suspense>
+    </>
+  );
+}
+```
+
+## Parallel Routes
+
+```
+app/
+  dashboard/
+    @analytics/
+      page.js
+    @revenue/
+      page.js
+    layout.js
+    page.js
+```
+
+```jsx
+// app/dashboard/layout.js
+export default function Layout({ children, analytics, revenue }) {
+  return (
+    <>
+      {children}
+      <div className="grid">
+        {analytics}
+        {revenue}
+      </div>
+    </>
+  );
+}
+```
+
+## Intercepting Routes
+
+```jsx
+// app/photos/[id]/page.js
+export default function PhotoPage({ params }) {
+  return <FullScreenPhoto id={params.id} />;
+}
+
+// app/photos/(..)photos/[id]/page.js (intercept)
+export default function PhotoModal({ params }) {
+  return <Modal><Photo id={params.id} /></Modal>;
+}
+```
+
+## Server Actions
+
+```jsx
+// app/actions.js
+'use server';
+
+export async function createPost(formData) {
+  const title = formData.get('title');
+  const content = formData.get('content');
+  
+  const post = await db.posts.create({
+    data: { title, content }
+  });
+  
+  revalidatePath('/blog');
+  redirect(`/blog/${post.slug}`);
+}
+
+// app/new-post/page.js
+import { createPost } from './actions';
+
+export default function NewPost() {
+  return (
+    <form action={createPost}>
+      <input name="title" required />
+      <textarea name="content" required />
+      <button type="submit">Create</button>
+    </form>
+  );
+}
+```
+
+## Migration Checklist
+
+- [ ] Move `_app.js` to `app/layout.js`
+- [ ] Convert pages to `page.js` files
+- [ ] Update dynamic routes structure
+- [ ] Replace `getServerSideProps` with async Server Components
+- [ ] Replace `getStaticProps` with `generateStaticParams`
+- [ ] Update API routes to Route Handlers
+- [ ] Convert metadata from `Head` to `metadata` export
+- [ ] Add loading states with `loading.js`
+- [ ] Add error boundaries with `error.js`
+- [ ] Update navigation to use `next/navigation`
+- [ ] Test all routes thoroughly
+- [ ] Update TypeScript types
+
+## Common Pitfalls
+
+### 1. Using Hooks in Server Components
+
+```jsx
+// ❌ Error
+export default async function Page() {
+  const [state, setState] = useState(); // Can't use hooks!
+  const data = await fetchData();
+  return <div>{data}</div>;
+}
+
+// ✅ Solution: Mark as client component
+'use client';
+
+export default function Page() {
+  const [state, setState] = useState();
+  return <div>...</div>;
+}
+```
+
+### 2. Serialization Issues
+
+```jsx
+// ❌ Can't pass functions as props from Server to Client
+<ClientComponent onClick={() => {}} />
+
+// ✅ Define function in client component
+<ClientComponent /> // Define onClick inside ClientComponent
+```
+
+### 3. Importing Client Components
+
+```jsx
+// ❌ Server Component importing Client Component
+import ClientButton from './ClientButton'; // Has 'use client'
+// Can't use hooks here because ClientButton makes this a client component
+
+// ✅ Use composition
+export default function ServerComponent({ children }) {
+  return <div>{children}</div>;
+}
+```
+
+## Performance Tips
+
+1. **Keep Server Components** as much as possible
+2. **Use Suspense** for progressive loading
+3. **Enable caching** with `fetch` options
+4. **Optimize images** with `next/image`
+5. **Use `loading.js`** for instant feedback
+
+## Resources
+
+- [Next.js App Router Docs](https://nextjs.org/docs)
+- [Migration Guide](https://nextjs.org/docs/app/building-your-application/upgrading)
+- [Server Components RFC](https://github.com/reactjs/rfcs)
+
+## Conclusion
+
+The App Router is a significant improvement. Take it step by step, and you'll love the new features!
+
+Next week: Modern CSS techniques!
+
+lwh

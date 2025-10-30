@@ -1,0 +1,300 @@
+---
+number: 8
+title: "Docker for Developers: Beyond the Basics"
+description: "Advanced Docker patterns, multi-stage builds, and production-ready containerization strategies."
+date: "2025-06-22"
+slug: "docker-advanced"
+readingTime: "9 min"
+topics: ["Docker", "DevOps", "Containers"]
+published: true
+---
+
+# Docker for Developers: Beyond the Basics
+
+Edition #8 takes you beyond Docker basics into advanced patterns and production strategies.
+
+## Multi-Stage Builds
+
+Reduce image size dramatically:
+
+```dockerfile
+# Build stage
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# Production stage
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY package*.json ./
+EXPOSE 3000
+CMD ["node", "dist/index.js"]
+```
+
+This pattern keeps your production image small and secure.
+
+## Docker Compose for Development
+
+```yaml
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/myapp
+    depends_on:
+      - db
+  
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=myapp
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+```
+
+## Build Optimization
+
+### Layer Caching
+
+Order matters! Put changing files last:
+
+```dockerfile
+# ✅ Good - dependencies cached separately
+COPY package*.json ./
+RUN npm ci
+COPY . .
+
+# ❌ Bad - cache invalidated on any file change
+COPY . .
+RUN npm ci
+```
+
+### .dockerignore
+
+Exclude unnecessary files:
+
+```
+node_modules
+npm-debug.log
+.git
+.env
+dist
+coverage
+```
+
+## Health Checks
+
+```dockerfile
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s \
+  CMD node healthcheck.js || exit 1
+```
+
+```javascript
+// healthcheck.js
+const http = require('http');
+
+const options = {
+  host: 'localhost',
+  port: 3000,
+  path: '/health',
+  timeout: 2000
+};
+
+http.get(options, (res) => {
+  if (res.statusCode === 200) {
+    process.exit(0);
+  } else {
+    process.exit(1);
+  }
+}).on('error', () => {
+  process.exit(1);
+});
+```
+
+## Security Best Practices
+
+### Non-Root User
+
+```dockerfile
+FROM node:20-alpine
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodejs -u 1001
+USER nodejs
+```
+
+### Scan for Vulnerabilities
+
+```bash
+docker scan myapp:latest
+```
+
+### Minimal Base Images
+
+```dockerfile
+# Use Alpine for smaller attack surface
+FROM node:20-alpine
+
+# Or use distroless
+FROM gcr.io/distroless/nodejs20-debian11
+```
+
+## Development vs Production
+
+### Development Dockerfile
+
+```dockerfile
+FROM node:20
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+CMD ["npm", "run", "dev"]
+```
+
+### Production Dockerfile
+
+```dockerfile
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+USER node
+CMD ["node", "dist/index.js"]
+```
+
+## Volume Management
+
+### Named Volumes
+
+```bash
+docker volume create app_data
+docker run -v app_data:/data myapp
+```
+
+### Bind Mounts for Development
+
+```bash
+docker run -v $(pwd):/app myapp
+```
+
+## Networking
+
+### Custom Networks
+
+```bash
+docker network create app_network
+docker run --network app_network --name db postgres
+docker run --network app_network --name api myapp
+```
+
+## Docker BuildKit
+
+Enable for better performance:
+
+```bash
+export DOCKER_BUILDKIT=1
+docker build .
+```
+
+### Build Secrets
+
+```dockerfile
+# syntax=docker/dockerfile:1
+FROM node:20-alpine
+RUN --mount=type=secret,id=npm_token \
+  echo "//registry.npmjs.org/:_authToken=$(cat /run/secrets/npm_token)" > .npmrc && \
+  npm ci && \
+  rm .npmrc
+```
+
+```bash
+docker build --secret id=npm_token,src=.npm_token .
+```
+
+## Logging
+
+### JSON Logging
+
+```javascript
+const logger = {
+  info: (msg, meta = {}) => console.log(JSON.stringify({ level: 'info', msg, ...meta })),
+  error: (msg, meta = {}) => console.error(JSON.stringify({ level: 'error', msg, ...meta }))
+};
+```
+
+### Log Driver Configuration
+
+```yaml
+services:
+  app:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+```
+
+## Resource Limits
+
+```yaml
+services:
+  app:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          memory: 256M
+```
+
+## Common Pitfalls
+
+1. **Large image sizes** - Use multi-stage builds
+2. **Running as root** - Always use non-root users
+3. **Outdated base images** - Regularly update
+4. **Exposed secrets** - Never commit secrets
+5. **No health checks** - Always implement health checks
+
+## Production Checklist
+
+- [ ] Multi-stage builds implemented
+- [ ] Running as non-root user
+- [ ] Health checks configured
+- [ ] Logs going to stdout/stderr
+- [ ] Resource limits set
+- [ ] Security scanning automated
+- [ ] .dockerignore optimized
+- [ ] Environment variables externalized
+- [ ] Secrets management in place
+- [ ] Monitoring and alerting configured
+
+## Conclusion
+
+Docker is powerful, but with power comes responsibility. Follow these patterns for reliable, secure containers!
+
+Next week: Git workflows that actually work!
+
+lwh

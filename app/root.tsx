@@ -35,11 +35,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="author" content="lwh" />
-        <meta name="robots" content="index, follow" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="googlebot" content="index, follow" />
-        <link rel="canonical" href="https://lwh.codes" />
+        <meta name="bingbot" content="index, follow" />
+        <meta httpEquiv="x-ua-compatible" content="ie=edge" />
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+        <meta name="format-detection" content="telephone=no" />
         <Meta />
         <Links />
+        {/* Structured Data - Person */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -56,6 +61,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 "https://discord.gg/lwhcoder"
               ],
               knowsAbout: ["React", "Next.js", "TypeScript", "Node.js", "Web Development", "Full Stack Development"],
+            }),
+          }}
+        />
+        {/* Structured Data - Website */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "lwh Portfolio",
+              url: "https://lwh.codes",
+              description: "Full stack developer portfolio featuring projects, blog posts, and newsletter about web development",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: "https://lwh.codes/blog?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
             }),
           }}
         />

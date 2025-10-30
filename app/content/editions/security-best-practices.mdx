@@ -1,0 +1,421 @@
+---
+number: 6
+title: "Security Best Practices Every Developer Should Know"
+description: "Essential security practices: authentication, authorization, XSS, CSRF, and protecting your applications."
+date: "2025-06-08"
+slug: "security-best-practices"
+readingTime: "9 min"
+topics: ["Security", "Web Development", "Best Practices"]
+published: true
+---
+
+# Security Best Practices Every Developer Should Know
+
+Edition #6 covers essential security practices every developer needs to implement.
+
+## Authentication vs Authorization
+
+### Authentication
+**Who are you?**
+
+```javascript
+// JWT-based authentication
+const token = jwt.sign(
+  { userId: user.id, email: user.email },
+  process.env.JWT_SECRET,
+  { expiresIn: '24h' }
+);
+```
+
+### Authorization
+**What can you do?**
+
+```javascript
+// Role-based authorization
+function requireRole(role) {
+  return (req, res, next) => {
+    if (!req.user || req.user.role !== role) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
+    next();
+  };
+}
+
+app.delete('/admin/users/:id', requireRole('admin'), deleteUser);
+```
+
+## Password Security
+
+### Hashing
+
+```javascript
+import bcrypt from 'bcrypt';
+
+// Hash password
+const saltRounds = 10;
+const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+// Verify password
+const isValid = await bcrypt.compare(password, hashedPassword);
+```
+
+**Never:**
+- Store passwords in plain text
+- Use weak hashing (MD5, SHA1)
+- Use encryption instead of hashing
+
+## Cross-Site Scripting (XSS)
+
+### Reflected XSS
+
+```javascript
+// ❌ Vulnerable
+app.get('/search', (req, res) => {
+  res.send(`<h1>Results for: ${req.query.q}</h1>`);
+});
+
+// ✅ Safe - escape user input
+import { escape } from 'html-escaper';
+
+app.get('/search', (req, res) => {
+  res.send(`<h1>Results for: ${escape(req.query.q)}</h1>`);
+});
+```
+
+### Stored XSS
+
+```javascript
+// ✅ Sanitize before storing
+import DOMPurify from 'isomorphic-dompurify';
+
+const cleanContent = DOMPurify.sanitize(userInput);
+await db.posts.create({ content: cleanContent });
+```
+
+### React Protection
+
+React escapes by default:
+
+```jsx
+// ✅ Safe
+<div>{userInput}</div>
+
+// ❌ Dangerous
+<div dangerouslySetInnerHTML={{ __html: userInput }} />
+```
+
+## Cross-Site Request Forgery (CSRF)
+
+### CSRF Tokens
+
+```javascript
+import csrf from 'csurf';
+
+const csrfProtection = csrf({ cookie: true });
+
+app.get('/form', csrfProtection, (req, res) => {
+  res.render('form', { csrfToken: req.csrfToken() });
+});
+
+app.post('/submit', csrfProtection, (req, res) => {
+  // Process form
+});
+```
+
+### SameSite Cookies
+
+```javascript
+res.cookie('session', token, {
+  httpOnly: true,
+  secure: true,
+  sameSite: 'strict'
+});
+```
+
+## SQL Injection
+
+### Parameterized Queries
+
+```javascript
+// ❌ Vulnerable
+const query = `SELECT * FROM users WHERE email = '${email}'`;
+
+// ✅ Safe - parameterized query
+const query = 'SELECT * FROM users WHERE email = ?';
+const users = await db.query(query, [email]);
+
+// ✅ Safe - ORM
+const user = await User.findOne({ where: { email } });
+```
+
+## Content Security Policy (CSP)
+
+```javascript
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' https://trusted-cdn.com; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data: https:; " +
+    "font-src 'self' data:; " +
+    "connect-src 'self' https://api.example.com;"
+  );
+  next();
+});
+```
+
+## Security Headers
+
+```javascript
+import helmet from 'helmet';
+
+app.use(helmet());
+
+// Or manually:
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+```
+
+## API Security
+
+### Rate Limiting
+
+```javascript
+import rateLimit from 'express-rate-limit';
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: 'Too many requests'
+});
+
+app.use('/api/', limiter);
+```
+
+### API Keys
+
+```javascript
+function validateApiKey(req, res, next) {
+  const apiKey = req.headers['x-api-key'];
+  
+  if (!apiKey || !isValidApiKey(apiKey)) {
+    return res.status(401).json({ error: 'Invalid API key' });
+  }
+  
+  next();
+}
+
+app.use('/api/', validateApiKey);
+```
+
+### OAuth 2.0
+
+```javascript
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: '/auth/google/callback'
+}, (accessToken, refreshToken, profile, done) => {
+  // Find or create user
+  return done(null, user);
+}));
+```
+
+## Input Validation
+
+```javascript
+import { z } from 'zod';
+
+const userSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+  age: z.number().min(18).max(120)
+});
+
+app.post('/register', (req, res) => {
+  try {
+    const data = userSchema.parse(req.body);
+    // Process validated data
+  } catch (error) {
+    return res.status(400).json({ error: error.errors });
+  }
+});
+```
+
+## Environment Variables
+
+```javascript
+// ❌ Never commit secrets
+// config.js
+module.exports = {
+  apiKey: 'sk_live_123456789'
+};
+
+// ✅ Use environment variables
+// .env (add to .gitignore)
+API_KEY=sk_live_123456789
+
+// config.js
+require('dotenv').config();
+module.exports = {
+  apiKey: process.env.API_KEY
+};
+```
+
+## Dependency Security
+
+### Audit Dependencies
+
+```bash
+npm audit
+npm audit fix
+
+# Check for outdated packages
+npm outdated
+```
+
+### Use Lock Files
+
+```bash
+# Commit these files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+```
+
+### Automated Updates
+
+```yaml
+# dependabot.yml
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+```
+
+## Session Management
+
+### Secure Session Configuration
+
+```javascript
+import session from 'express-session';
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: true, // HTTPS only
+    httpOnly: true, // No JavaScript access
+    maxAge: 3600000, // 1 hour
+    sameSite: 'strict'
+  }
+}));
+```
+
+### Session Timeout
+
+```javascript
+function checkSessionTimeout(req, res, next) {
+  if (req.session.lastActivity) {
+    const timeout = 30 * 60 * 1000; // 30 minutes
+    if (Date.now() - req.session.lastActivity > timeout) {
+      req.session.destroy();
+      return res.status(401).json({ error: 'Session expired' });
+    }
+  }
+  req.session.lastActivity = Date.now();
+  next();
+}
+```
+
+## File Upload Security
+
+```javascript
+import multer from 'multer';
+import path from 'path';
+
+const storage = multer.diskStorage({
+  destination: './uploads/',
+  filename: (req, file, cb) => {
+    // Generate unique filename
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  fileFilter: (req, file, cb) => {
+    // Only allow images
+    const allowedTypes = /jpeg|jpg|png|gif/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+      return cb(null, true);
+    }
+    cb(new Error('Only image files are allowed'));
+  }
+});
+```
+
+## HTTPS/TLS
+
+```javascript
+import https from 'https';
+import fs from 'fs';
+
+const options = {
+  key: fs.readFileSync('private-key.pem'),
+  cert: fs.readFileSync('certificate.pem')
+};
+
+https.createServer(options, app).listen(443);
+
+// Redirect HTTP to HTTPS
+app.use((req, res, next) => {
+  if (!req.secure) {
+    return res.redirect('https://' + req.headers.host + req.url);
+  }
+  next();
+});
+```
+
+## Security Checklist
+
+- [ ] All inputs validated and sanitized
+- [ ] Passwords properly hashed
+- [ ] HTTPS enforced
+- [ ] Security headers configured
+- [ ] CSRF protection implemented
+- [ ] SQL injection prevented
+- [ ] XSS prevention in place
+- [ ] Rate limiting configured
+- [ ] Dependencies regularly updated
+- [ ] Secrets in environment variables
+- [ ] Sessions properly managed
+- [ ] File uploads restricted
+- [ ] API endpoints protected
+- [ ] Error messages don't leak info
+
+## Conclusion
+
+Security is not optional. Build it in from day one, not as an afterthought!
+
+Next week: Modern CSS techniques!
+
+lwh

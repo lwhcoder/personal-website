@@ -9,6 +9,7 @@ export default [
   route("contact", "routes/contact.tsx"),
   route("newsletter", "routes/newsletter.tsx"),
   route("editions", "routes/editions.tsx"),
+  route("editions/:slug", "routes/editions.$slug.tsx"),
   route("changelog", "routes/changelog.tsx"),
   route("privacy", "routes/privacy.tsx"),
   route("sitemap.xml", "routes/sitemap[.]xml.tsx"),

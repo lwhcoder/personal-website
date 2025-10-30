@@ -1,0 +1,231 @@
+---
+number: 10
+title: "Building Scalable APIs: Lessons from Production"
+description: "Real-world strategies for building APIs that scale. From rate limiting to caching, and everything in between."
+date: "2025-07-06"
+slug: "scalable-apis"
+readingTime: "10 min"
+topics: ["API Design", "Backend", "Scalability"]
+published: true
+---
+
+# Building Scalable APIs: Lessons from Production
+
+Edition #10! Today we're covering battle-tested strategies for building APIs that can handle scale.
+
+## The Foundation: Good Design
+
+Before optimization, focus on solid API design:
+
+### RESTful Principles
+
+```
+GET    /api/posts       - List posts
+GET    /api/posts/:id   - Get single post
+POST   /api/posts       - Create post
+PUT    /api/posts/:id   - Update post
+DELETE /api/posts/:id   - Delete post
+```
+
+### Versioning
+
+Always version your APIs:
+
+```
+/api/v1/posts
+/api/v2/posts
+```
+
+## Rate Limiting
+
+Protect your API from abuse:
+
+```javascript
+import rateLimit from 'express-rate-limit';
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests, please try again later.',
+});
+
+app.use('/api/', limiter);
+```
+
+### Tiered Rate Limits
+
+Different limits for different user tiers:
+
+```javascript
+const limits = {
+  free: { max: 100, windowMs: 15 * 60 * 1000 },
+  pro: { max: 1000, windowMs: 15 * 60 * 1000 },
+  enterprise: { max: 10000, windowMs: 15 * 60 * 1000 },
+};
+```
+
+## Caching Strategies
+
+Cache at multiple levels:
+
+### 1. Application-Level Caching
+
+```javascript
+import NodeCache from 'node-cache';
+const cache = new NodeCache({ stdTTL: 600 });
+
+async function getPosts() {
+  const cached = cache.get('posts');
+  if (cached) return cached;
+  
+  const posts = await db.posts.findMany();
+  cache.set('posts', posts);
+  return posts;
+}
+```
+
+### 2. HTTP Caching
+
+Use proper cache headers:
+
+```javascript
+app.get('/api/posts', (req, res) => {
+  res.set({
+    'Cache-Control': 'public, max-age=300', // 5 minutes
+    'ETag': generateETag(data),
+  });
+  res.json(data);
+});
+```
+
+### 3. CDN Caching
+
+For static or infrequently changing data, use a CDN.
+
+## Database Optimization
+
+### Indexing
+
+Index frequently queried fields:
+
+```sql
+CREATE INDEX idx_posts_user_id ON posts(user_id);
+CREATE INDEX idx_posts_created_at ON posts(created_at DESC);
+```
+
+### Query Optimization
+
+```javascript
+// ❌ Bad - N+1 queries
+const posts = await db.posts.findMany();
+for (const post of posts) {
+  post.author = await db.users.findUnique({ where: { id: post.userId } });
+}
+
+// ✅ Good - Single query with join
+const posts = await db.posts.findMany({
+  include: { author: true }
+});
+```
+
+## Pagination
+
+Always paginate large datasets:
+
+```javascript
+app.get('/api/posts', async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const skip = (page - 1) * limit;
+
+  const [posts, total] = await Promise.all([
+    db.posts.findMany({ skip, take: limit }),
+    db.posts.count(),
+  ]);
+
+  res.json({
+    data: posts,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  });
+});
+```
+
+## Error Handling
+
+Consistent error responses:
+
+```javascript
+class APIError extends Error {
+  constructor(statusCode, message, details = {}) {
+    super(message);
+    this.statusCode = statusCode;
+    this.details = details;
+  }
+}
+
+app.use((err, req, res, next) => {
+  if (err instanceof APIError) {
+    return res.status(err.statusCode).json({
+      error: {
+        message: err.message,
+        details: err.details,
+      },
+    });
+  }
+  
+  // Unexpected errors
+  console.error(err);
+  res.status(500).json({
+    error: { message: 'Internal server error' },
+  });
+});
+```
+
+## Monitoring and Observability
+
+Track key metrics:
+
+```javascript
+import prometheus from 'prom-client';
+
+const httpRequestDuration = new prometheus.Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'Duration of HTTP requests in seconds',
+  labelNames: ['method', 'route', 'status'],
+});
+
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = (Date.now() - start) / 1000;
+    httpRequestDuration.labels(req.method, req.route.path, res.statusCode).observe(duration);
+  });
+  next();
+});
+```
+
+## Real-World Checklist
+
+- [ ] API versioning implemented
+- [ ] Rate limiting configured
+- [ ] Caching strategy in place
+- [ ] Database queries optimized
+- [ ] Pagination for list endpoints
+- [ ] Consistent error handling
+- [ ] Monitoring and logging
+- [ ] Documentation (OpenAPI/Swagger)
+- [ ] Load testing performed
+- [ ] Security headers configured
+
+## Conclusion
+
+Building scalable APIs is about making smart decisions early and continuously optimizing based on real usage patterns.
+
+Next week: Web Performance in 2025!
+
+lwh

@@ -12,7 +12,6 @@ import bash from "highlight.js/lib/languages/bash";
 import css from "highlight.js/lib/languages/css";
 import json from "highlight.js/lib/languages/json";
 import xml from "highlight.js/lib/languages/xml";
-import { Badge } from "~/components/ui/badge";
 
 // Register languages
 hljs.registerLanguage("javascript", javascript);
@@ -111,6 +110,36 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
 
   return (
     <main className="min-h-screen py-20">
+      {/* Breadcrumb Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://lwh.codes",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Blog",
+                item: "https://lwh.codes/blog",
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: post.title,
+                item: `https://lwh.codes/blog/${post.slug}`,
+              },
+            ],
+          }),
+        }}
+      />
       {/* Structured Data for Article */}
       <script
         type="application/ld+json"

@@ -4,6 +4,7 @@ import { Input } from "~/components/ui/input";
 import { Mail, Check } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Link } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -156,7 +157,7 @@ export default function Newsletter() {
               <p className="text-xs uppercase tracking-wider text-muted-foreground">Frequency</p>
               <p className="text-sm text-foreground">Weekly or bi-weekly</p>
               <p className="text-sm text-muted-foreground">
-                No spam, just quality content
+                No spam, just quality content, unsubscribe anytime
               </p>
             </div>
 
@@ -233,9 +234,11 @@ export default function Newsletter() {
           </div>
 
           <div className="mt-8">
-            <Button variant="ghost" size="lg">
-              View all editions
-            </Button>
+            <Link to="/editions">
+              <Button variant="ghost" size="lg">
+                View all editions
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

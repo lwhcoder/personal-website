@@ -1,0 +1,413 @@
+---
+number: 7
+title: "Git Workflows That Actually Work in Teams"
+description: "Practical Git strategies for team collaboration. From branching models to commit conventions."
+date: "2025-06-15"
+slug: "git-workflows"
+readingTime: "8 min"
+topics: ["Git", "Version Control", "Team Collaboration"]
+published: true
+---
+
+# Git Workflows That Actually Work in Teams
+
+Edition #7 covers practical Git workflows for effective team collaboration.
+
+## Branching Strategies
+
+### Git Flow
+
+Traditional but effective for release-based workflows:
+
+```bash
+# Main branches
+main (production)
+develop (integration)
+
+# Supporting branches
+feature/* (new features)
+release/* (release preparation)
+hotfix/* (production fixes)
+```
+
+### GitHub Flow
+
+Simpler, great for continuous deployment:
+
+```bash
+main (always deployable)
+feature/* (short-lived feature branches)
+```
+
+### Trunk-Based Development
+
+For high-velocity teams:
+
+```bash
+# Everyone commits to main
+main
+
+# Use feature flags for incomplete features
+if (featureFlags.newDesign) {
+  return <NewDesign />;
+}
+```
+
+## Commit Conventions
+
+### Conventional Commits
+
+```bash
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+### Types
+
+```bash
+feat: new feature
+fix: bug fix
+docs: documentation changes
+style: formatting, missing semicolons, etc.
+refactor: code refactoring
+test: adding tests
+chore: updating build tasks, etc.
+```
+
+### Examples
+
+```bash
+feat(auth): add OAuth2 authentication
+
+Implement OAuth2 flow with Google and GitHub providers
+
+Closes #123
+
+fix(api): handle null values in user profile
+
+The API was throwing 500 errors when user profile
+fields were null. Added null checks and default values.
+
+Fixes #456
+```
+
+## Pull Request Best Practices
+
+### PR Template
+
+``markdown
+## Description
+Brief description of changes
+
+## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation update
+
+## Testing
+How has this been tested?
+
+## Checklist
+- [ ] Code follows style guidelines
+- [ ] Self-reviewed the code
+- [ ] Commented complex logic
+- [ ] Updated documentation
+- [ ] Added tests
+- [ ] All tests passing
+``
+
+### Review Guidelines
+
+**For Authors:**
+- Keep PRs small (< 400 lines)
+- Write clear descriptions
+- Respond to feedback promptly
+- Be open to suggestions
+
+**For Reviewers:**
+- Be respectful and constructive
+- Suggest alternatives, don't just criticize
+- Approve when good enough, not perfect
+- Explain your reasoning
+
+## Useful Git Commands
+
+### Interactive Rebase
+
+Clean up your commit history:
+
+```bash
+git rebase -i HEAD~3
+
+# Then in the editor:
+pick a1b2c3d First commit
+squash d4e5f6g Second commit
+squash h7i8j9k Third commit
+```
+
+### Cherry Pick
+
+Apply specific commits:
+
+```bash
+git cherry-pick abc123
+```
+
+### Stash
+
+Save work in progress:
+
+```bash
+# Stash changes
+git stash
+
+# Stash with message
+git stash save "WIP: working on auth"
+
+# List stashes
+git stash list
+
+# Apply stash
+git stash apply stash@{0}
+
+# Apply and remove
+git stash pop
+```
+
+### Bisect
+
+Find the commit that introduced a bug:
+
+```bash
+git bisect start
+git bisect bad  # Current commit is bad
+git bisect good abc123  # This commit was good
+
+# Git will checkout commits for you to test
+# After each test:
+git bisect good  # or git bisect bad
+
+# When found:
+git bisect reset
+```
+
+## Merge vs Rebase
+
+### When to Merge
+
+```bash
+git checkout main
+git merge feature-branch
+
+# Creates a merge commit
+# Preserves complete history
+# Good for: public branches, feature integration
+```
+
+### When to Rebase
+
+```bash
+git checkout feature-branch
+git rebase main
+
+# Rewrites commit history
+# Creates linear history
+# Good for: private branches, cleaning up before PR
+```
+
+**Golden Rule:** Never rebase public branches!
+
+## Handling Conflicts
+
+```bash
+# Update your branch
+git checkout feature-branch
+git fetch origin
+git rebase origin/main
+
+# If conflicts occur:
+# 1. Resolve conflicts in your editor
+# 2. Stage resolved files
+git add .
+
+# 3. Continue rebase
+git rebase --continue
+
+# Or abort if needed
+git rebase --abort
+```
+
+## Git Hooks
+
+### Pre-commit Hook
+
+```bash
+#!/bin/sh
+# .git/hooks/pre-commit
+
+npm run lint
+npm run test
+```
+
+### Using Husky
+
+```bash
+npm install --save-dev husky
+
+# package.json
+{
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}
+```
+
+## Semantic Versioning
+
+```
+MAJOR.MINOR.PATCH
+
+1.0.0 -> Initial release
+1.0.1 -> Patch (bug fix)
+1.1.0 -> Minor (new feature, backwards compatible)
+2.0.0 -> Major (breaking change)
+```
+
+### Automated Versioning
+
+```bash
+# Install standard-version
+npm install --save-dev standard-version
+
+# Generate changelog and bump version
+npm run release
+```
+
+## Protecting Branches
+
+### Branch Protection Rules
+
+```yaml
+Required:
+  - At least 1 approval
+  - Pass status checks
+  - Up to date with base branch
+  - No force pushes
+  - No deletions
+```
+
+## Git Aliases
+
+Speed up your workflow:
+
+```bash
+# ~/.gitconfig
+[alias]
+  co = checkout
+  br = branch
+  ci = commit
+  st = status
+  unstage = reset HEAD --
+  last = log -1 HEAD
+  visual = log --graph --oneline --decorate --all
+  amend = commit --amend --no-edit
+```
+
+## Monorepo Considerations
+
+### Using Git Submodules
+
+```bash
+# Add submodule
+git submodule add https://github.com/user/repo.git libs/repo
+
+# Clone with submodules
+git clone --recursive <repo-url>
+
+# Update submodules
+git submodule update --remote
+```
+
+### Using Git Subtree
+
+```bash
+# Add subtree
+git subtree add --prefix=libs/repo https://github.com/user/repo.git main
+
+# Update subtree
+git subtree pull --prefix=libs/repo https://github.com/user/repo.git main
+```
+
+## Team Workflow Example
+
+```bash
+# 1. Create feature branch
+git checkout -b feature/user-authentication
+
+# 2. Make commits following conventions
+git commit -m "feat(auth): add login form"
+git commit -m "feat(auth): implement JWT validation"
+
+# 3. Keep branch updated
+git fetch origin
+git rebase origin/main
+
+# 4. Push and create PR
+git push origin feature/user-authentication
+
+# 5. Address review feedback
+git commit -m "refactor(auth): improve error handling"
+
+# 6. Squash if needed (before merge)
+git rebase -i origin/main
+
+# 7. Merge when approved
+# (Done via PR interface)
+
+# 8. Delete feature branch
+git branch -d feature/user-authentication
+```
+
+## Troubleshooting
+
+### Undo Last Commit
+
+```bash
+# Keep changes
+git reset --soft HEAD~1
+
+# Discard changes
+git reset --hard HEAD~1
+```
+
+### Recover Deleted Branch
+
+```bash
+git reflog
+git checkout -b recovered-branch <commit-hash>
+```
+
+### Clean Working Directory
+
+```bash
+# Remove untracked files
+git clean -fd
+
+# Preview what will be removed
+git clean -fdn
+```
+
+## Conclusion
+
+Good Git workflows are about communication and consistency. Choose what works for your team and stick to it!
+
+Next week: Security best practices!
+
+lwh

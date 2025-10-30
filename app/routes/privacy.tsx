@@ -3,8 +3,16 @@ import type { Route } from "./+types/privacy";
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Privacy Policy | lwh" },
-    { name: "description", content: "Privacy policy for lwh.codes - How we handle your data and protect your privacy" },
+    { name: "description", content: "Privacy policy for lwh.codes - How we handle your data and protect your privacy. Learn about our data collection, usage, and protection practices." },
+    { name: "keywords", content: "privacy policy, data protection, privacy, security, gdpr" },
     { name: "robots", content: "index, follow" },
+    { property: "og:title", content: "Privacy Policy | lwh" },
+    { property: "og:description", content: "How we handle your data and protect your privacy" },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: "https://lwh.codes/privacy" },
+    { name: "twitter:card", content: "summary" },
+    { name: "twitter:title", content: "Privacy Policy | lwh" },
+    { name: "twitter:description", content: "How we handle your data and protect your privacy" },
   ];
 }
 

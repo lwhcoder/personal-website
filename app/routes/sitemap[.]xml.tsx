@@ -2,7 +2,9 @@ import type { Route } from "./+types/sitemap[.]xml";
 
 export async function loader() {
   const { getAllPosts } = await import("~/lib/blog.server");
+  const { getAllEditions } = await import("~/lib/editions.server");
   const posts = getAllPosts();
+  const editions = getAllEditions();
   
   const baseUrl = "https://lwh.codes";
   const currentDate = new Date().toISOString();
@@ -13,8 +15,8 @@ export async function loader() {
     { url: "/projects", priority: "0.8", changefreq: "weekly", lastmod: currentDate },
     { url: "/blog", priority: "0.9", changefreq: "daily", lastmod: currentDate },
     { url: "/contact", priority: "0.7", changefreq: "monthly", lastmod: currentDate },
-    { url: "/newsletter", priority: "0.7", changefreq: "monthly", lastmod: currentDate },
-    { url: "/editions", priority: "0.7", changefreq: "weekly", lastmod: currentDate },
+    { url: "/newsletter", priority: "0.8", changefreq: "monthly", lastmod: currentDate },
+    { url: "/editions", priority: "0.8", changefreq: "weekly", lastmod: currentDate },
     { url: "/changelog", priority: "0.6", changefreq: "monthly", lastmod: currentDate },
     { url: "/privacy", priority: "0.5", changefreq: "yearly", lastmod: currentDate },
   ];
@@ -26,7 +28,14 @@ export async function loader() {
     lastmod: post.date,
   }));
   
-  const allPages = [...staticPages, ...blogPosts];
+  const editionPages = editions.map(edition => ({
+    url: `/editions/${edition.slug}`,
+    priority: "0.7",
+    changefreq: "monthly",
+    lastmod: edition.date,
+  }));
+  
+  const allPages = [...staticPages, ...blogPosts, ...editionPages];
   
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

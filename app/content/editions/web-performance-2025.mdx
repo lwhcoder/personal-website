@@ -1,0 +1,254 @@
+---
+number: 9
+title: "Web Performance in 2025: The Complete Guide"
+description: "Modern techniques for blazing-fast websites. Core Web Vitals, image optimization, and performance monitoring."
+date: "2025-06-29"
+slug: "web-performance-2025"
+readingTime: "9 min"
+topics: ["Performance", "Web Development", "Optimization"]
+published: true
+---
+
+# Web Performance in 2025: The Complete Guide
+
+Welcome to edition #9! Today we're diving into everything you need to know about web performance in 2025.
+
+## Core Web Vitals
+
+Google's Core Web Vitals are the foundation of modern web performance:
+
+### Largest Contentful Paint (LCP)
+
+Measures loading performance. Should occur within 2.5 seconds.
+
+```javascript
+// Optimize LCP with preloading
+<link rel="preload" as="image" href="/hero.jpg" />
+```
+
+### First Input Delay (FID)
+
+Measures interactivity. Should be less than 100ms.
+
+```javascript
+// Use code splitting to reduce main thread work
+const HeavyComponent = lazy(() => import('./HeavyComponent'));
+```
+
+### Cumulative Layout Shift (CLS)
+
+Measures visual stability. Should be less than 0.1.
+
+```css
+/* Always specify dimensions for images */
+img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+```
+
+## Image Optimization
+
+Images are often the biggest bottleneck:
+
+### Modern Formats
+
+```html
+<picture>
+  <source srcset="image.avif" type="image/avif" />
+  <source srcset="image.webp" type="image/webp" />
+  <img src="image.jpg" alt="Fallback" />
+</picture>
+```
+
+### Lazy Loading
+
+```html
+<img src="image.jpg" loading="lazy" alt="Description" />
+```
+
+### Responsive Images
+
+```html
+<img
+  srcset="small.jpg 400w, medium.jpg 800w, large.jpg 1200w"
+  sizes="(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px"
+  src="medium.jpg"
+  alt="Responsive image"
+/>
+```
+
+## JavaScript Optimization
+
+### Code Splitting
+
+```javascript
+// Route-based splitting
+const Home = lazy(() => import('./routes/Home'));
+const About = lazy(() => import('./routes/About'));
+
+function App() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </Suspense>
+  );
+}
+```
+
+### Tree Shaking
+
+Ensure your bundler can eliminate dead code:
+
+```javascript
+// ✅ Good - Named imports enable tree shaking
+import { Button } from 'ui-library';
+
+// ❌ Bad - Default imports include everything
+import UILibrary from 'ui-library';
+```
+
+## Caching Strategies
+
+### Service Workers
+
+```javascript
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
+    })
+  );
+});
+```
+
+### HTTP Caching
+
+```javascript
+// Set cache headers
+res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+```
+
+## Performance Monitoring
+
+### Real User Monitoring (RUM)
+
+```javascript
+import { onCLS, onFID, onLCP } from 'web-vitals';
+
+onCLS(console.log);
+onFID(console.log);
+onLCP(console.log);
+```
+
+### Performance API
+
+```javascript
+const perfData = performance.getEntriesByType('navigation')[0];
+console.log('DOM Content Loaded:', perfData.domContentLoadedEventEnd);
+console.log('Load Complete:', perfData.loadEventEnd);
+```
+
+## Font Optimization
+
+### Font Display Strategy
+
+```css
+@font-face {
+  font-family: 'CustomFont';
+  src: url('/fonts/custom.woff2') format('woff2');
+  font-display: swap; /* Show fallback first */
+}
+```
+
+### Variable Fonts
+
+Use variable fonts to reduce file count:
+
+```css
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+}
+```
+
+## Critical CSS
+
+Extract and inline critical CSS:
+
+```html
+<style>
+  /* Critical above-the-fold styles */
+  .header { /* ... */ }
+  .hero { /* ... */ }
+</style>
+<link rel="preload" href="/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+```
+
+## Resource Hints
+
+### Preconnect
+
+```html
+<link rel="preconnect" href="https://api.example.com" />
+```
+
+### DNS Prefetch
+
+```html
+<link rel="dns-prefetch" href="https://analytics.example.com" />
+```
+
+### Prefetch
+
+```html
+<link rel="prefetch" href="/next-page.html" />
+```
+
+## Performance Budget
+
+Set and enforce performance budgets:
+
+```javascript
+// webpack.config.js
+module.exports = {
+  performance: {
+    maxAssetSize: 244000,
+    maxEntrypointSize: 244000,
+    hints: 'error'
+  }
+};
+```
+
+## Testing Tools
+
+- **Lighthouse** - Automated audits
+- **WebPageTest** - Detailed performance analysis
+- **Chrome DevTools** - Real-time debugging
+- **Bundle Analyzer** - Visualize bundle size
+
+## Quick Wins Checklist
+
+- [ ] Enable compression (gzip/brotli)
+- [ ] Minify CSS, JS, and HTML
+- [ ] Optimize and compress images
+- [ ] Implement lazy loading
+- [ ] Use a CDN
+- [ ] Enable HTTP/2 or HTTP/3
+- [ ] Reduce third-party scripts
+- [ ] Implement caching strategies
+- [ ] Use modern image formats
+- [ ] Minimize main thread work
+
+## Conclusion
+
+Performance is not a one-time task—it's an ongoing commitment. Monitor, measure, and iterate!
+
+Next week: Docker for developers!
+
+lwh

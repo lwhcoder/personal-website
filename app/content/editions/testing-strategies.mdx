@@ -1,0 +1,493 @@
+---
+number: 4
+title: "Testing Strategies for Confident Deployments"
+description: "From unit tests to E2E: building a comprehensive testing strategy that catches bugs before production."
+date: "2025-05-25"
+slug: "testing-strategies"
+readingTime: "9 min"
+topics: ["Testing", "Quality Assurance", "DevOps"]
+published: true
+---
+
+# Testing Strategies for Confident Deployments
+
+Edition #4 covers building a comprehensive testing strategy from unit tests to end-to-end testing.
+
+## The Testing Pyramid
+
+```
+        /\
+       /E2E\
+      /------\
+     /  Integ  \
+    /----------\
+   /    Unit     \
+  /--------------\
+```
+
+**70% Unit Tests** - Fast, isolated, focused  
+**20% Integration Tests** - Component interactions  
+**10% E2E Tests** - Full user flows
+
+## Unit Testing
+
+### Testing Pure Functions
+
+```javascript
+// sum.js
+export function sum(a, b) {
+  return a + b;
+}
+
+// sum.test.js
+import { sum } from './sum';
+
+describe('sum', () => {
+  it('adds two numbers', () => {
+    expect(sum(1, 2)).toBe(3);
+  });
+  
+  it('handles negative numbers', () => {
+    expect(sum(-1, -2)).toBe(-3);
+  });
+});
+```
+
+### Testing React Components
+
+```jsx
+// Button.jsx
+export function Button({ onClick, children }) {
+  return <button onClick={onClick}>{children}</button>;
+}
+
+// Button.test.jsx
+import { render, fireEvent } from '@testing-library/react';
+import { Button } from './Button';
+
+describe('Button', () => {
+  it('renders children', () => {
+    const { getByText } = render(<Button>Click me</Button>);
+    expect(getByText('Click me')).toBeInTheDocument();
+  });
+  
+  it('calls onClick when clicked', () => {
+    const handleClick = jest.fn();
+    const { getByText } = render(
+      <Button onClick={handleClick}>Click me</Button>
+    );
+    
+    fireEvent.click(getByText('Click me'));
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+### Mocking Dependencies
+
+```javascript
+// user.service.js
+import axios from 'axios';
+
+export async function getUser(id) {
+  const response = await axios.get(`/api/users/${id}`);
+  return response.data;
+}
+
+// user.service.test.js
+import axios from 'axios';
+import { getUser } from './user.service';
+
+jest.mock('axios');
+
+describe('getUser', () => {
+  it('fetches user data', async () => {
+    const mockUser = { id: 1, name: 'John' };
+    axios.get.mockResolvedValue({ data: mockUser });
+    
+    const user = await getUser(1);
+    
+    expect(axios.get).toHaveBeenCalledWith('/api/users/1');
+    expect(user).toEqual(mockUser);
+  });
+});
+```
+
+## Integration Testing
+
+### Testing API Endpoints
+
+```javascript
+import request from 'supertest';
+import app from './app';
+import { db } from './database';
+
+describe('POST /api/users', () => {
+  beforeEach(async () => {
+    await db.users.deleteMany({});
+  });
+  
+  it('creates a new user', async () => {
+    const userData = {
+      email: 'test@example.com',
+      password: 'password123'
+    };
+    
+    const response = await request(app)
+      .post('/api/users')
+      .send(userData)
+      .expect(201);
+    
+    expect(response.body).toMatchObject({
+      email: userData.email
+    });
+    expect(response.body.password).toBeUndefined();
+  });
+  
+  it('returns 400 for invalid email', async () => {
+    await request(app)
+      .post('/api/users')
+      .send({ email: 'invalid', password: '123' })
+      .expect(400);
+  });
+});
+```
+
+### Testing Database Interactions
+
+```javascript
+import { createUser, getUserById } from './user.repository';
+import { db } from './database';
+
+describe('User Repository', () => {
+  beforeAll(async () => {
+    await db.connect();
+  });
+  
+  afterAll(async () => {
+    await db.disconnect();
+  });
+  
+  beforeEach(async () => {
+    await db.users.deleteMany({});
+  });
+  
+  it('creates and retrieves a user', async () => {
+    const userData = { email: 'test@example.com', name: 'Test User' };
+    const created = await createUser(userData);
+    
+    expect(created.id).toBeDefined();
+    
+    const retrieved = await getUserById(created.id);
+    expect(retrieved).toMatchObject(userData);
+  });
+});
+```
+
+## End-to-End Testing
+
+### Playwright Example
+
+```javascript
+import { test, expect } from '@playwright/test';
+
+test.describe('User Login', () => {
+  test('should login successfully', async ({ page }) => {
+    await page.goto('http://localhost:3000');
+    
+    await page.fill('input[name="email"]', 'user@example.com');
+    await page.fill('input[name="password"]', 'password123');
+    await page.click('button[type="submit"]');
+    
+    await expect(page).toHaveURL('http://localhost:3000/dashboard');
+    await expect(page.locator('h1')).toContainText('Welcome');
+  });
+  
+  test('should show error for invalid credentials', async ({ page }) => {
+    await page.goto('http://localhost:3000');
+    
+    await page.fill('input[name="email"]', 'user@example.com');
+    await page.fill('input[name="password"]', 'wrongpassword');
+    await page.click('button[type="submit"]');
+    
+    await expect(page.locator('.error')).toContainText('Invalid credentials');
+  });
+});
+```
+
+### Cypress Example
+
+```javascript
+describe('Todo App', () => {
+  beforeEach(() => {
+    cy.visit('http://localhost:3000');
+  });
+  
+  it('adds a new todo', () => {
+    cy.get('input[placeholder="What needs to be done?"]')
+      .type('Buy groceries{enter}');
+    
+    cy.get('.todo-list li')
+      .should('have.length', 1)
+      .first()
+      .should('have.text', 'Buy groceries');
+  });
+  
+  it('marks todo as complete', () => {
+    cy.get('input[placeholder="What needs to be done?"]')
+      .type('Buy groceries{enter}');
+    
+    cy.get('.todo-list li')
+      .first()
+      .find('input[type="checkbox"]')
+      .check();
+    
+    cy.get('.todo-list li')
+      .first()
+      .should('have.class', 'completed');
+  });
+});
+```
+
+## Test-Driven Development (TDD)
+
+### The Red-Green-Refactor Cycle
+
+```javascript
+// 1. RED - Write failing test
+describe('Calculator', () => {
+  it('multiplies two numbers', () => {
+    expect(multiply(2, 3)).toBe(6);
+  });
+});
+
+// 2. GREEN - Make it pass
+function multiply(a, b) {
+  return a * b;
+}
+
+// 3. REFACTOR - Improve code
+function multiply(...numbers) {
+  return numbers.reduce((acc, num) => acc * num, 1);
+}
+```
+
+## Snapshot Testing
+
+```javascript
+import { render } from '@testing-library/react';
+import { UserCard } from './UserCard';
+
+describe('UserCard', () => {
+  it('renders correctly', () => {
+    const user = {
+      name: 'John Doe',
+      email: 'john@example.com',
+      avatar: '/avatar.jpg'
+    };
+    
+    const { container } = render(<UserCard user={user} />);
+    expect(container.firstChild).toMatchSnapshot();
+  });
+});
+```
+
+## Visual Regression Testing
+
+```javascript
+// Using Storybook and Chromatic
+import { UserCard } from './UserCard';
+
+export default {
+  title: 'Components/UserCard',
+  component: UserCard,
+};
+
+export const Default = () => (
+  <UserCard
+    user={{
+      name: 'John Doe',
+      email: 'john@example.com',
+      avatar: '/avatar.jpg'
+    }}
+  />
+);
+```
+
+## Performance Testing
+
+```javascript
+import { performance } from 'perf_hooks';
+
+describe('Performance', () => {
+  it('processes large dataset quickly', () => {
+    const data = Array.from({ length: 10000 }, (_, i) => i);
+    
+    const start = performance.now();
+    const result = processLargeDataset(data);
+    const end = performance.now();
+    
+    expect(end - start).toBeLessThan(100); // Should take less than 100ms
+  });
+});
+```
+
+## Code Coverage
+
+```bash
+# Run tests with coverage
+npm test -- --coverage
+
+# Coverage thresholds in package.json
+{
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  }
+}
+```
+
+## Testing Best Practices
+
+### AAA Pattern
+
+```javascript
+test('user registration', async () => {
+  // Arrange
+  const userData = { email: 'test@example.com', password: 'pass123' };
+  
+  // Act
+  const result = await registerUser(userData);
+  
+  // Assert
+  expect(result.success).toBe(true);
+  expect(result.user.email).toBe(userData.email);
+});
+```
+
+### Test Isolation
+
+```javascript
+describe('User Service', () => {
+  beforeEach(() => {
+    // Fresh state for each test
+    jest.clearAllMocks();
+  });
+  
+  it('test 1', () => {
+    // This test doesn't affect...
+  });
+  
+  it('test 2', () => {
+    // ...this test
+  });
+});
+```
+
+### Descriptive Test Names
+
+```javascript
+// ❌ Bad
+it('works', () => {});
+
+// ✅ Good
+it('creates user with valid email and password', () => {});
+it('returns 400 when email is missing', () => {});
+it('hashes password before saving to database', () => {});
+```
+
+## Continuous Integration
+
+```yaml
+# .github/workflows/test.yml
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run tests
+        run: npm test -- --coverage
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+```
+
+## Testing Tools
+
+**Unit/Integration:**
+- Jest
+- Vitest
+- Mocha + Chai
+
+**React Testing:**
+- React Testing Library
+- Enzyme (legacy)
+
+**E2E:**
+- Playwright
+- Cypress
+- Selenium
+
+**Visual Testing:**
+- Chromatic
+- Percy
+- BackstopJS
+
+## What to Test
+
+### ✅ Do Test
+
+- Business logic
+- Edge cases
+- Error handling
+- User interactions
+- API integrations
+- Critical user flows
+
+### ❌ Don't Test
+
+- Third-party libraries
+- Implementation details
+- Trivial code
+- Generated code
+
+## Testing Checklist
+
+- [ ] Unit tests for business logic
+- [ ] Integration tests for APIs
+- [ ] E2E tests for critical flows
+- [ ] 80%+ code coverage
+- [ ] Tests run in CI/CD
+- [ ] Fast feedback (unit tests under 5min)
+- [ ] Flaky tests fixed immediately
+- [ ] Test data factories for easy setup
+- [ ] Mocks for external services
+- [ ] Clear test documentation
+
+## Conclusion
+
+Good tests give you confidence to refactor and deploy. Invest in testing early!
+
+Next week: Next.js App Router migration!
+
+lwh

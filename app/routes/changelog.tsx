@@ -4,11 +4,15 @@ import { Badge } from "~/components/ui/badge";
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Changelog | lwh" },
-    { name: "description", content: "Track updates, new features, and improvements to this website." },
+    { name: "description", content: "Track updates, new features, and improvements to this website. See the latest changes and enhancements to lwh.codes." },
+    { name: "keywords", content: "changelog, updates, website updates, new features, improvements" },
     { property: "og:title", content: "Changelog | lwh" },
-    { property: "og:description", content: "Track updates and improvements" },
+    { property: "og:description", content: "Track updates, new features, and improvements" },
     { property: "og:type", content: "website" },
+    { property: "og:url", content: "https://lwh.codes/changelog" },
     { name: "twitter:card", content: "summary" },
+    { name: "twitter:title", content: "Changelog | lwh" },
+    { name: "twitter:description", content: "Track updates and improvements" },
   ];
 }
 
