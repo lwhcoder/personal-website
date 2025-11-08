@@ -40,16 +40,16 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative flex min-h-[calc(100vh-3.5rem)] items-center overflow-hidden border-b">
+      <section className="relative flex min-h-[calc(100vh-3.5rem)] items-center overflow-hidden border-b bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
         <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-16 lg:grid-cols-2">
             {/* Left side - Content */}
             <div className="flex flex-col space-y-8">
-              <div className="space-y-6 font-sans">
-                <h1 className="text-6xl font-extrabold italic tracking-tight sm:text-7xl lg:text-8xl">
-                  lwh
+              <div className="space-y-4">
+                <h1 className="text-6xl font-extrabold italic tracking-tight sm:text-7xl lg:text-8xl" style={ { fontFamily: "Times New Roman"}}>
+                  hey, im lwh
                 </h1>
-                <p className="max-w-lg text-xl text-muted-foreground">
+                <p className="max-w-lg text-xl">
                   Full stack developer building digital experiences with clean code and thoughtful design
                 </p>
               </div>
