@@ -45,8 +45,8 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <div className="grid items-center gap-16 lg:grid-cols-2">
             {/* Left side - Content */}
             <div className="flex flex-col space-y-8">
-              <div className="space-y-6">
-                <h1 className="text-6xl font-bold tracking-tight sm:text-7xl lg:text-8xl">
+              <div className="space-y-6 font-sans">
+                <h1 className="text-6xl font-extrabold italic tracking-tight sm:text-7xl lg:text-8xl">
                   lwh
                 </h1>
                 <p className="max-w-lg text-xl text-muted-foreground">
