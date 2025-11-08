@@ -1,6 +1,8 @@
 .DS_Store
 .env
 /node_modules/
+package-lock.json
+bun.lock
 
 # React Router
 /.react-router/
