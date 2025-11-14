@@ -2,6 +2,7 @@ import type { Route } from "./+types/home";
 import { Globe } from "~/components/globe";
 import { Button } from "~/components/ui/button";
 import { getAllPosts } from "~/lib/blog.server";
+import projectsData from "~/content/projects/projects.json";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -21,6 +22,7 @@ export function meta({}: Route.MetaArgs) {
 export async function loader() {
   const allPosts = getAllPosts();
   const recentPosts = allPosts.slice(0, 3);
+  const recentProjects = projectsData.slice(0, 2);
   
   return {
     recentPosts: recentPosts.map(post => ({
@@ -31,11 +33,12 @@ export async function loader() {
       tags: post.tags,
       readingTime: post.readingTime,
     })),
+    recentProjects,
   };
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { recentPosts } = loaderData;
+  const { recentPosts, recentProjects } = loaderData;
 
   return (
     <main className="min-h-screen">
@@ -84,7 +87,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               Services
             </h2>
             <p className="max-w-2xl text-3xl font-medium sm:text-4xl">
-              Building web applications from concept to deployment
+              Building full-stack applications from concept to deployment
             </p>
           </div>
 
@@ -99,33 +102,33 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             <div className="space-y-3">
               <h3 className="text-xl font-medium">UI/UX Design</h3>
               <p className="text-muted-foreground">
-                Interface design focused on usability and visual appeal
+                Interface design focused on minimalism and visual appeal
               </p>
             </div>
 
             <div className="space-y-3">
               <h3 className="text-xl font-medium">API Development</h3>
               <p className="text-muted-foreground">
-                RESTful APIs and backend systems built for performance
+                RESTful APIs and backend systems built for performance and scalability
               </p>
             </div>
 
             <div className="space-y-3">
               <h3 className="text-xl font-medium">Database Design</h3>
               <p className="text-muted-foreground">
-                Scalable database architecture and optimization
+                Optimized scalable database architecture and optimization
               </p>
             </div>
 
             <div className="space-y-3">
               <h3 className="text-xl font-medium">DevOps</h3>
               <p className="text-muted-foreground">
-                CI/CD pipelines, containerization, and cloud deployment
+                CI/CD pipelines, containerization, and cloud or local deployment
               </p>
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-xl font-medium">Consulting</h3>
+              <h3 className="text-xl font-medium">Consulting/Mentoring</h3>
               <p className="text-muted-foreground">
                 Technical guidance and code reviews for your projects
               </p>
@@ -157,7 +160,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               <h3 className="font-medium">Backend</h3>
               <div className="space-y-2 text-sm text-muted-foreground">
                 <p>Node.js</p>
-                <p>Express</p>
+                <p>Hono</p>
                 <p>Python</p>
                 <p>REST APIs</p>
                 <p>WebSockets</p>
@@ -169,6 +172,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               <div className="space-y-2 text-sm text-muted-foreground">
                 <p>MongoDB</p>
                 <p>PostgreSQL</p>
+                <p>MySQL</p>
                 <p>Redis</p>
                 <p>Drizzle ORM</p>
               </div>
@@ -181,6 +185,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                 <p>Docker</p>
                 <p>Linux</p>
                 <p>VS Code</p>
+                <p>CI/CD Pipelines</p>
               </div>
             </div>
           </div>
@@ -210,45 +215,73 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2">
-            <div className="group cursor-pointer space-y-4">
-              <div className="aspect-video overflow-hidden rounded-lg border bg-muted transition-all group-hover:border-foreground/20">
-                <div className="flex h-full items-center justify-center text-muted-foreground">
-                  Project Preview
+          <div className="space-y-24">
+            {recentProjects.map((project, index) => (
+              <article
+                key={index}
+                className="group grid gap-8 border-t pt-8 md:grid-cols-3"
+              >
+                {/* Project Preview */}
+                <div className="md:col-span-2">
+                  <div className="mb-6 aspect-video overflow-hidden rounded-lg border bg-muted transition-all group-hover:border-foreground/20">
+                    {project.coverImage ? (
+                      <img 
+                        src={project.coverImage} 
+                        alt={project.title}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-muted-foreground">
+                        Project Preview
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-xl font-medium">Project Name</h3>
-                <p className="text-sm text-muted-foreground">
-                  Full-stack web application with real-time features
-                </p>
-              </div>
-            </div>
 
-            <div className="group cursor-pointer space-y-4">
-              <div className="aspect-video overflow-hidden rounded-lg border bg-muted transition-all group-hover:border-foreground/20">
-                <div className="flex h-full items-center justify-center text-muted-foreground">
-                  Project Preview
+                {/* Project Info */}
+                <div className="flex flex-col justify-between space-y-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">{project.year}</span>
+                      <span className="text-sm text-muted-foreground">{project.status}</span>
+                    </div>
+                    
+                    <div>
+                      <h2 className="mb-3 text-2xl font-medium">{project.title}</h2>
+                      <p className="text-muted-foreground">{project.description}</p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-xs text-muted-foreground"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Button variant="ghost" size="sm" asChild>
+                      <a href={`https://${project.repo}`}>View project <span className="transition-transform group-hover:translate-x-1 group-hover:cursor-pointer">→</span></a>
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-xl font-medium">Another Project</h3>
-                <p className="text-sm text-muted-foreground">
-                  Modern SaaS platform with authentication and payments
-                </p>
-              </div>
-            </div>
+              </article>
+            ))}
           </div>
 
-          <div className="mt-8 sm:hidden">
-            
-            <Button variant="ghost" className="w-full">
-              <span className="group inline-flex items-center gap-2">
-                View all projects
-                <span className="transition-transform group-hover:translate-x-1 group-hover:cursor-pointer">→</span>
-              </span>
-            </Button>
-            
+          <div className="mt-16">
+            <a href="/projects">
+              <Button variant="ghost" className="w-full sm:w-auto">
+                <span className="group inline-flex items-center gap-2">
+                  View all projects
+                  <span className="transition-transform group-hover:translate-x-1 group-hover:cursor-pointer">→</span>
+                </span>
+              </Button>
+            </a>
           </div>
         </div>
       </section>
@@ -305,7 +338,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                     {post.tags.slice(0, 3).map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs text-muted-foreground"
+                        className="text-xs text-muted-foreground ml-2 mr-2"
                       >
                         {tag}
                       </span>

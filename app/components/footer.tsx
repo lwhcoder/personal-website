@@ -5,8 +5,6 @@ import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 import { useState } from "react"
 import { toast } from "sonner"
-import { FontAwesomeIcon } from "@fontawesome/react-fontawesome"
-import { faXTwitter } from '@fortawesome/free-solid-svg-icons'; // Import a specific icon
 export function Footer() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -167,7 +165,7 @@ export function Footer() {
               rel="noopener noreferrer"
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
-              <FontAweosmeIcon icon={faXTwitter} />
+              placehold
               <span className="sr-only">Twitter</span>
             </a>
             <a

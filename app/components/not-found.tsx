@@ -87,7 +87,7 @@ export function NotFound() {
           <div className="mx-auto max-w-4xl">
             <div className="space-y-6">
               <p className="text-sm text-muted-foreground">
-                Search our blog instead?
+                Search my blog instead?
               </p>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

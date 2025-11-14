@@ -2,6 +2,7 @@ import type { Route } from "./+types/projects";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { useState, useMemo } from "react";
+import projectsData from "~/content/projects/projects.json";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -18,106 +19,12 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const projects = [
-  {
-    title: "E-Commerce Platform",
-    description: "Full-stack online store with payment integration, inventory management, and admin dashboard",
-    year: "2024",
-    tags: ["Next.js", "TypeScript", "Stripe", "PostgreSQL"],
-    status: "Live",
-    link: "#",
-  },
-  {
-    title: "Real-time Chat Application",
-    description: "WebSocket-based messaging platform with end-to-end encryption and media sharing",
-    year: "2024",
-    tags: ["React", "Node.js", "WebSockets", "MongoDB"],
-    status: "Live",
-    link: "#",
-  },
-  {
-    title: "Project Management Tool",
-    description: "Collaborative workspace with task tracking, team management, and timeline visualization",
-    year: "2024",
-    tags: ["React", "Express", "PostgreSQL", "Redis"],
-    status: "In Progress",
-    link: "#",
-  },
-  {
-    title: "Analytics Dashboard",
-    description: "Real-time data visualization platform with custom reporting and export capabilities",
-    year: "2023",
-    tags: ["Next.js", "Python", "D3.js", "MongoDB"],
-    status: "Live",
-    link: "#",
-  },
-  {
-    title: "Social Media Platform",
-    description: "Modern social network with posts, stories, real-time notifications, and user profiles",
-    year: "2023",
-    tags: ["React", "Node.js", "MongoDB", "Redis"],
-    status: "Live",
-    link: "#",
-  },
-  {
-    title: "API Gateway Service",
-    description: "Microservices architecture with rate limiting, authentication, and request routing",
-    year: "2023",
-    tags: ["Node.js", "Docker", "Redis", "PostgreSQL"],
-    status: "Live",
-    link: "#",
-  },
-  {
-    title: "E-Commerce Platform",
-    description: "Full-stack online store with payment integration, inventory management, and admin dashboard",
-    year: "2024",
-    tags: ["Next.js", "TypeScript", "Stripe", "PostgreSQL"],
-    status: "Live",
-    link: "#",
-  },
-  {
-    title: "Real-time Chat Application",
-    description: "WebSocket-based messaging platform with end-to-end encryption and media sharing",
-    year: "2024",
-    tags: ["React", "Node.js", "WebSockets", "MongoDB"],
-    status: "Live",
-    link: "#",
-  },
-  {
-    title: "Project Management Tool",
-    description: "Collaborative workspace with task tracking, team management, and timeline visualization",
-    year: "2024",
-    tags: ["React", "Express", "PostgreSQL", "Redis"],
-    status: "In Progress",
-    link: "#",
-  },
-  {
-    title: "Analytics Dashboard",
-    description: "Real-time data visualization platform with custom reporting and export capabilities",
-    year: "2023",
-    tags: ["Next.js", "Python", "D3.js", "MongoDB"],
-    status: "Live",
-    link: "#",
-  },
-  {
-    title: "Social Media Platform",
-    description: "Modern social network with posts, stories, real-time notifications, and user profiles",
-    year: "2023",
-    tags: ["React", "Node.js", "MongoDB", "Redis"],
-    status: "Live",
-    link: "#",
-  },
-  {
-    title: "API Gateway Service",
-    description: "Microservices architecture with rate limiting, authentication, and request routing",
-    year: "2023",
-    tags: ["Node.js", "Docker", "Redis", "PostgreSQL"],
-    status: "Live",
-    link: "#",
-  },
-];
+export async function loader() {
+  return { projects: projectsData };
+}
 
-export default function Projects() {
+export default function Projects({ loaderData }: Route.ComponentProps) {
+  const { projects } = loaderData;
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [limit, setLimit] = useState<number>(5);
 
@@ -177,15 +84,24 @@ export default function Projects() {
         <div className="space-y-24">
           {filteredProjects.slice(0, limit).map((project, index) => (
             <article
+              
               key={index}
               className="group grid gap-8 border-t pt-8 md:grid-cols-3"
             >
               {/* Project Preview */}
               <div className="md:col-span-2">
                 <div className="mb-6 aspect-video overflow-hidden rounded-lg border bg-muted transition-all group-hover:border-foreground/20">
-                  <div className="flex h-full items-center justify-center text-muted-foreground">
-                    Project Preview
-                  </div>
+                  {project.coverImage ? (
+                    <img 
+                      src={project.coverImage} 
+                      alt={project.title}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-muted-foreground">
+                      Project Preview
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -217,7 +133,7 @@ export default function Projects() {
 
                 <div className="flex gap-3">
                   <Button variant="ghost" size="sm" asChild>
-                    <a href={project.link}>View project <span className="transition-transform group-hover:translate-x-1 group-hover:cursor-pointer">→</span></a>
+                    <a href={`https://${project.repo}`}>View project <span className="transition-transform group-hover:translate-x-1 group-hover:cursor-pointer">→</span></a>
                   </Button>
                 </div>
               </div>

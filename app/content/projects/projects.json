@@ -1,0 +1,32 @@
+[
+  {
+    "title": "E-Commerce Platform",
+    "coverImage": "https://placehold.co/600x400/png",
+    "repo": "github.com/lwhcoder/e-commerce-platform",
+    "description": "Full-stack online store with payment integration, inventory management, and admin dashboard",
+    "year": "2024",
+    "tags": ["Next.js", "TypeScript", "Stripe", "PostgreSQL"],
+    "status": "Live",
+    "link": "#"
+  },
+  {
+    "title": "Social Media App",
+    "coverImage": "https://placehold.co/600x400/png",
+    "repo": "github.com/lwhcoder/social-media-app",
+    "description": "A mobile app for connecting with friends, sharing updates, and messaging",
+    "year": "2023",
+    "tags": ["React Native", "Firebase", "GraphQL"],
+    "status": "In Development",
+    "link": "#"
+  },
+  {
+    "title": "Project Management Tool",
+    "coverImage": "https://placehold.co/600x400/png",
+    "repo": "github.com/lwhcoder/project-management-tool",
+    "description": "Web application for team collaboration, task tracking, and project planning",
+    "year": "2022",
+    "tags": ["Vue.js", "Node.js", "MongoDB"],
+    "status": "Completed",
+    "link": "#"
+  }
+]
